@@ -1,0 +1,3013 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+<title>Türkiye Hava Sahası Dashboard - FlightRadar24.com</title>
+
+<meta property="og:title" content="Türkiye Hava Sahası Dashboard - FlightRadar24.com" />
+
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
+
+<link rel="icon" href="data:image/x-icon;" type="image/x-icon">
+
+
+<script type="text/javascript">
+window.FlexDashboardComponents = [];
+</script>
+
+<script id="flexdashboard-navbar" type="application/json">
+[{"icon":"fa-share-alt","items":[{"title":"Twitter","icon":"fa-twitter"},{"title":"Facebook","icon":"fa-facebook"},{"title":"Google+","icon":"fa-google-plus"},{"title":"LinkedIn","icon":"fa-linkedin"},{"title":"Pinterest","icon":"fa-pinterest"}]},{"title":"Source Code","icon":"fa-code","href":"source_embed","align":"right"}]
+</script>
+<script src="site_libs/jquery-1.12.4/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/stickytableheaders-0.1.19/jquery.stickytableheaders.min.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<link href="site_libs/featherlight-1.3.5/featherlight.min.css" rel="stylesheet" />
+<script src="site_libs/featherlight-1.3.5/featherlight.min.js"></script>
+<link href="site_libs/prism-1.4.1/prism.css" rel="stylesheet" />
+<script src="site_libs/prism-1.4.1/prism.js"></script>
+<script src="site_libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+<script src="site_libs/plotly-binding-4.9.2.1/plotly.js"></script>
+<script src="site_libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="site_libs/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
+<script src="site_libs/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
+<link href="site_libs/plotly-htmlwidgets-css-1.52.2/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="site_libs/plotly-main-1.52.2/plotly-latest.min.js"></script>
+<link href="site_libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
+<script src="site_libs/leaflet-1.3.1/leaflet.js"></script>
+<link href="site_libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
+<script src="site_libs/Proj4Leaflet-1.0.1/proj4-compressed.js"></script>
+<script src="site_libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+<link href="site_libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
+<script src="site_libs/leaflet-binding-2.0.3/leaflet.js"></script>
+<link href="site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="site_libs/datatables-binding-0.15/datatables.js"></script>
+<link href="site_libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="site_libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="site_libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
+<link href="site_libs/dt-ext-fixedcolumns-1.10.20/css/fixedColumns.dataTables.min.css" rel="stylesheet" />
+<script src="site_libs/dt-ext-fixedcolumns-1.10.20/js/dataTables.fixedColumns.min.js"></script>
+<style type="text/css">
+
+/*
+ Dashboard CSS from Keen IO Dashboards
+ (https://github.com/keen/dashboards)
+*/
+
+body {
+  background: #f2f2f2;
+  padding: 60px 0 0 8px; /* padding-top overridden by theme */
+}
+
+body hr {
+  border-color: #d7d7d7;
+  margin: 10px 0;
+}
+
+.navbar-inverse .navbar-nav > li > a,
+.navbar .navbar-brand {
+  text-decoration: none;
+}
+
+.navbar-logo {
+  margin-top: 1px;
+}
+
+.navbar-logo img {
+  margin-right: 12px;
+}
+
+.navbar-author {
+  margin-left: 10px;
+  font-size: 15px;
+}
+
+.navbar .dropdown-menu .fa {
+  min-width: 20px;
+}
+
+.navbar .dropdown-menu {
+  min-width: 150px;
+  max-height: 500px;
+  overflow: auto;
+}
+
+.chart-wrapper,
+.nav-tabs-custom,
+.sbframe-commentary
+{
+  background: #fff;
+  border: 1px solid #e2e2e2;
+  border-radius: 3px;
+  margin-bottom: 8px;
+  margin-right: 8px;
+}
+
+.chart-title {
+  border-bottom: 1px solid #d7d7d7;
+  color: #666;
+  font-size: 14px;
+  font-weight: 300;
+  padding: 7px 10px 4px;
+}
+
+.chart-wrapper .chart-title:empty {
+  display: none;
+}
+
+.chart-wrapper .chart-stage {
+  overflow: hidden;
+  padding: 5px 10px;
+  position: relative;
+}
+
+.chart-wrapper .chart-notes {
+  background: #fbfbfb;
+  border-top: 1px solid #e2e2e2;
+  color: #808080;
+  font-size: 12px;
+  padding: 8px 10px 5px;
+}
+
+/*
+ CSS for handling flexbox layout
+*/
+
+#dashboard-container {
+  visibility: hidden;
+}
+
+.tab-content>.dashboard-page-wrapper.active {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.dashboard-page-wrapper {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.dashboard-row-orientation {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.dashboard-row {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+      -ms-flex-direction: row;
+          flex-direction: row;
+}
+
+.dashboard-row-flex {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+}
+
+.dashboard-column-orientation {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+      -ms-flex-direction: row;
+          flex-direction: row;
+}
+
+.dashboard-column {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.chart-wrapper-flex {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.chart-stage-flex {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  position: relative;
+}
+
+.chart-shim {
+  position: absolute;
+  left: 8px; top: 8px; right: 8px; bottom: 8px;
+}
+
+.no-padding .chart-shim {
+  left: 0; top: 0; right: 0; bottom: 0;
+}
+
+.flowing-content-shim {
+  overflow: auto;
+  left: 0; top: 0; right: 0; bottom: 0;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.flowing-content-container {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.chart-stage .table-bordered {
+  border: none;
+}
+
+.chart-stage .table-bordered > tbody > tr > th,
+.chart-stage .table-bordered > tfoot > tr > th,
+.chart-stage .table-bordered > tbody > tr > td,
+.chart-stage .table-bordered > tfoot > tr > td {
+  border: none;
+}
+
+.chart-stage .table-bordered > tbody > tr > td {
+  border-top: 1px solid #dddddd;
+}
+
+.chart-stage .table-bordered > thead > tr > th {
+  border: none;
+  border-bottom: 2px solid #dddddd;
+}
+
+.bootstrap-table table>thead {
+  background-color: #fff;
+}
+
+.bootstrap-table table.data,
+.bootstrap-table table.shiny-table {
+  width: inherit !important;
+}
+
+.bootstrap-table table.data>tbody>tr>th,
+.bootstrap-table table.shiny-table>tbody>tr>th {
+  border-top: none;
+  border-bottom: 2px solid #dddddd;
+  padding: 5px;
+}
+
+.bootstrap-table .data td[align=right] {
+  font-family: inherit;
+}
+
+.chart-wrapper form {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.shiny-input-container label {
+  font-weight: normal;
+}
+
+.chart-stage .html-widget {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.chart-stage .html-widget-static-bound {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.chart-stage .shiny-bound-output {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Omit display of empty paragraphs */
+
+.chart-shim>p:empty {
+  display: none;
+}
+
+.chart-stage>p:empty {
+  display: none;
+}
+
+/* Omit display of special knitr options div*/
+
+.chart-stage .knitr-options {
+  display: none;
+}
+
+/* Automatically resizing images */
+
+.image-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+}
+
+.image-container img {
+  opacity: 0;
+  overflow: hidden;
+}
+
+/* Value box */
+
+.value-box {
+  border-radius: 2px;
+  position: relative;
+  display: block;
+  margin-right: 8px;
+  margin-bottom: 8px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.value-box > .inner {
+  padding: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.value-box .value {
+  font-size: 38px;
+  font-weight: bold;
+  margin: 0 0 3px 0;
+  white-space: nowrap;
+  padding: 0;
+}
+
+.value-box .caption {
+  font-size: 15px;
+}
+.value-box .caption > small {
+  display: block;
+  font-size: 13px;
+  margin-top: 5px;
+}
+
+.value-box .icon i {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 80px;
+  color: rgba(0, 0, 0, 0.15);
+}
+
+.linked-value:hover {
+  cursor: pointer;
+}
+
+.value-box.linked-value:hover {
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* STORYBOARD */
+
+.storyboard-nav button {
+  background: transparent;
+  border: 0;
+  opacity: .3;
+  outline: none;
+  padding: 0;
+}
+
+.storyboard-nav button:hover,
+.storyboard-nav button:hover {
+  opacity: .5;
+}
+
+.storyboard-nav button:disabled,
+.storyboard-nav button:disabled {
+  opacity: .1;
+}
+
+.storyboard-nav .sbnext,
+.storyboard-nav .sbprev {
+  float: left;
+  width: 2%;
+  height: 120px;
+  font-size: 50px;
+}
+
+.storyboard-nav .sbprev {
+  text-align: left;
+  width: 2%;
+}
+
+.storyboard-nav .sbnext {
+  float: right;
+  text-align: right;
+  margin-right: 8px;
+}
+
+.storyboard-nav .sbframelist {
+  margin: 0 auto;
+  width: 94%;
+  height: 120px;
+  overflow: hidden;
+  text-shadow: none;
+  margin-bottom: 8px;
+}
+
+.storyboard-nav .sbframelist ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.storyboard-nav .sbframelist ul li {
+  float: left;
+  width: 270px;
+  height: 100%;
+  padding: 10px 10px 10px 10px;
+  margin-right: 8px;
+  background: #fff;
+  border: 1px solid #e2e2e2;
+  border-radius: 3px;
+  color: #3a3c47;
+  text-align: left;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.storyboard-nav .sbframelist ul li:last-child {
+  margin-right: 0px;
+}
+
+.storyboard-nav .sbframelist ul li.active {
+  color: #fff;
+  background: #B8B8B8;
+}
+
+.sbframe-commentary {
+  width: 300px;
+  background: #fbfbfb;
+  font-size: 14px;
+}
+
+.sbframe-commentary ul {
+  padding-left: 22px;
+}
+
+.sbframe.active {
+  display: flex;
+}
+
+.sbframe:not(.active) {
+  display: none;
+}
+
+/* NAV TABS */
+
+.nav-tabs-custom > .nav-tabs {
+  margin: 0;
+  border-bottom: 1px solid #d7d7d7;
+  color: #666;
+  font-size: 14px;
+  font-weight: 300;
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+}
+.nav-tabs-custom > .nav-tabs > li {
+  border-top: 3px solid transparent;
+  margin-bottom: -1px;
+  margin-right: 5px;
+}
+.nav-tabs-custom > .nav-tabs > li > a,
+.nav-tabs-custom > .nav-tabs > li > a:active {
+  color: #666;
+  font-weight: 300;
+  font-size: 14px;
+  border-radius: 0;
+  padding: 3px 10px 5px;
+  text-transform: none;
+}
+
+.nav-tabs-custom > .nav-tabs > li:not(.active) > a {
+  border-bottom-color: transparent;
+}
+
+.nav-tabs-custom > .nav-tabs > li > a.text-muted {
+  color: #999;
+}
+.nav-tabs-custom > .nav-tabs > li > a,
+.nav-tabs-custom > .nav-tabs > li > a:hover {
+  background: transparent;
+  margin: 0;
+}
+.nav-tabs-custom > .nav-tabs > li > a:hover {
+  color: #999;
+}
+.nav-tabs-custom > .nav-tabs > li:not(.active) > a:hover,
+.nav-tabs-custom > .nav-tabs > li:not(.active) > a:focus,
+.nav-tabs-custom > .nav-tabs > li:not(.active) > a:active {
+  border-color: transparent;
+}
+.nav-tabs-custom > .nav-tabs > li.active {
+  border-top-color: #3c8dbc;
+}
+.nav-tabs-custom > .nav-tabs > li.active > a,
+.nav-tabs-custom > .nav-tabs > li.active:hover > a {
+  background-color: #fff;
+  color: #666;
+}
+.nav-tabs-custom > .nav-tabs > li.active > a {
+  border-top-color: transparent;
+  border-left-color: #d7d7d7;
+  border-right-color: #d7d7d7;
+}
+.nav-tabs-custom > .nav-tabs > li:first-of-type {
+  margin-left: 0;
+}
+.nav-tabs-custom > .nav-tabs > li:first-of-type.active > a {
+  border-left-color: transparent;
+}
+.nav-tabs-custom > .nav-tabs.pull-right {
+  float: none !important;
+}
+.nav-tabs-custom > .nav-tabs.pull-right > li {
+  float: right;
+}
+.nav-tabs-custom > .nav-tabs.pull-right > li:first-of-type {
+  margin-right: 0;
+}
+.nav-tabs-custom > .nav-tabs.pull-right > li:first-of-type > a {
+  border-left-width: 1px;
+}
+.nav-tabs-custom > .nav-tabs.pull-right > li:first-of-type.active > a {
+  border-left-color: #d7d7d7;
+  border-right-color: transparent;
+}
+.nav-tabs-custom > .nav-tabs > li.header {
+  line-height: 35px;
+  padding: 0 10px;
+  font-size: 20px;
+  color: #666;
+}
+.nav-tabs-custom > .nav-tabs > li.header > .fa,
+.nav-tabs-custom > .nav-tabs > li.header > .glyphicon,
+.nav-tabs-custom > .nav-tabs > li.header > .ion {
+  margin-right: 5px;
+}
+.nav-tabs-custom > .tab-content {
+  background: #fff;
+  padding: 0;
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.nav-tabs-custom > .tab-content > .chart-wrapper {
+  background: #fff;
+  border: none;
+  margin: 0;
+}
+
+
+.nav-tabs-custom > .tab-content > .active {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.nav-tabs-custom .dropdown.open > a:active,
+.nav-tabs-custom .dropdown.open > a:focus {
+  background: transparent;
+  color: #999;
+}
+
+
+@media (max-width: 767px) {
+  .value-box {
+    text-align: center;
+    margin-right: 8px;
+  }
+  .value-box .icon {
+    display: none;
+  }
+}
+
+/* Fixed position sidebar */
+
+.section.sidebar {
+  position: fixed;
+  top: 51px; /* overridden by theme */
+  left: 0;
+  bottom: 0;
+  border-right: 1px solid #e2e2e2;
+  background-color: white; /* overridden by theme */
+  padding-left: 10px;
+  padding-right: 10px;
+  visibility: hidden;
+  overflow: auto;
+}
+
+.section.sidebar form p:first-child {
+  margin-top: 10px;
+}
+
+/* Embedded source code */
+
+#flexdashboard-source-code {
+  display: none;
+}
+
+.featherlight-content #flexdashboard-source-code {
+  display: inline-block;
+}
+
+.featherlight-content {
+  width: 80%;
+  max-width: 800px;
+  padding: 0 !important;
+  border-bottom: none !important;
+}
+
+.featherlight:last-of-type {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.featherlight-inner {
+  width: 100%;
+}
+
+.featherlight-content pre {
+  margin: 0;
+  border: 0;
+  background: #fff;
+  font-size: 12px;
+}
+
+.unselectable {
+  -ms-user-select: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: -moz-none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+#flexdashboard-source-code code {
+  -ms-user-select: text;
+  -webkit-user-select: text;
+  -khtml-user-select: text;
+  -moz-user-select: text;
+  -o-user-select: text;
+  user-select: text;
+}
+
+/* DataTables Tweaks */
+
+.dataTables_filter input[type="search"] {
+  -webkit-appearance: searchfield;
+  outline: none;
+}
+
+.dataTables_wrapper.no-footer
+.dataTables_info {
+  padding-top: 0;
+}
+
+
+table.dataTable thead th {
+  border-bottom: 1px solid #d7d7d7;
+}
+
+.dataTables_wrapper.no-footer .dataTables_scrollBody {
+  border-bottom: 1px solid #d7d7d7;
+}
+
+/* Mobile phone only CSS */
+
+.desktop-layout div.section.mobile {
+  display: none;
+}
+
+.mobile-layout div.section.no-mobile {
+  display: none;
+}
+
+.mobile-figure {
+  display: none;
+}
+
+
+
+body {
+  padding-top: 60px;
+}
+
+.section.sidebar {
+  top: 51px;
+  background-color: rgba(39, 128, 227, 0.1);
+}
+
+.value-box {
+  color: #f9f9f9;
+}
+
+.bg-primary {
+  background-color: rgba(39, 128, 227, 0.7);
+}
+
+.storyboard-nav .sbframelist ul li.active {
+  background-color: rgba(39, 128, 227, 0.7);
+}
+
+.nav-tabs-custom > .nav-tabs > li.active {
+  border-top-color: rgba(39, 128, 227, 0.7);
+}
+
+.bg-info {
+  background-color: rgba(153, 84, 187, 0.7);
+}
+
+.bg-warning {
+  background-color: rgba(255, 117, 24, 0.7);
+}
+
+.bg-danger {
+  background-color: rgba(255, 0, 57, 0.7);
+}
+
+.bg-success {
+  background-color: rgba(63, 182, 24, 0.7);
+}
+
+.chart-title {
+  font-weight: 500;
+}
+
+.nav-tabs-custom > .nav-tabs > li > a,
+.nav-tabs-custom > .nav-tabs > li > a:active {
+  font-weight: 500;
+}
+
+@media only screen and (min-width: 768px) {
+html, body {
+  height: 100%;
+}
+
+#dashboard-container {
+  height: 100%;
+}
+}
+</style>
+
+
+
+</head>
+
+<body>
+
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+<div class="container-fluid">
+<div class="navbar-header">
+
+<button id="navbar-button" type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+</button>
+
+<span class="navbar-logo pull-left">
+  
+</span>
+<span class="navbar-brand">
+  Türkiye Hava Sahası Dashboard - FlightRadar24.com
+  <span class="navbar-author">
+        </span>
+</span>
+
+</div>
+<div id="navbar" class="navbar-collapse collapse">
+<ul class="nav navbar-nav navbar-left">
+</ul>
+<ul class="nav navbar-nav navbar-right">
+</ul>
+</div><!--/.nav-collapse-->
+</div><!--/.container-->
+</div><!--/.navbar-->
+
+<script type="text/javascript">
+
+
+var FlexDashboard = (function () {
+
+  // initialize options
+  var _options = {};
+
+  var FlexDashboard = function() {
+
+    // default options
+    _options = $.extend(_options, {
+      theme: "cosmo",
+      fillPage: false,
+      orientation: 'columns',
+      storyboard: false,
+      defaultFigWidth: 576,
+      defaultFigHeight: 461,
+      defaultFigWidthMobile: 360,
+      defaultFigHeightMobile: 461,
+      isMobile: false,
+      isPortrait: false,
+      resize_reload: true
+    });
+  };
+
+  function init(options) {
+
+    // extend default options
+    $.extend(true, _options, options);
+
+    // add ids to sections that don't have them (pandoc won't assign ids
+    // to e.g. sections with titles consisting of only chinese characters)
+    var nextId = 1;
+    $('.level1:not([id]),.level2:not([id]),.level3:not([id])').each(function() {
+      $(this).attr('id', 'dashboard-' + nextId++);
+    });
+
+    // find navbar items
+    var navbarItems = $('#flexdashboard-navbar');
+    if (navbarItems.length)
+      navbarItems = JSON.parse(navbarItems.html());
+    addNavbarItems(navbarItems);
+
+    // find the main dashboard container
+    var dashboardContainer = $('#dashboard-container');
+
+    // resolve mobile classes
+    resolveMobileClasses(dashboardContainer);
+
+    // one time global initialization for components
+    componentsInit(dashboardContainer);
+
+    // look for a global sidebar
+    var globalSidebar = dashboardContainer.find(".section.level1.sidebar");
+    if (globalSidebar.length > 0) {
+
+      // global layout for fullscreen displays
+      if (!isMobilePhone()) {
+
+         // hoist it up to the top level
+         globalSidebar.insertBefore(dashboardContainer);
+
+         // lay it out (set width/positions)
+         layoutSidebar(globalSidebar, dashboardContainer);
+
+      // tuck sidebar into first page for mobile phones
+      } else {
+
+        // convert it into a level3 section
+        globalSidebar.removeClass('sidebar');
+        globalSidebar.removeClass('level1');
+        globalSidebar.addClass('level3');
+        var h1 = globalSidebar.children('h1');
+        var h3 = $('<h3></h3>');
+        h3.append(h1.contents());
+        h3.insertBefore(h1);
+        h1.detach();
+
+        // move it into the first page
+        var page = dashboardContainer.find('.section.level1').first();
+        if (page.length > 0)
+          page.prepend(globalSidebar);
+      }
+    }
+
+    // look for pages to layout
+    var pages = $('div.section.level1');
+    if (pages.length > 0) {
+
+        // find the navbar and collapse on clicked
+        var navbar = $('#navbar');
+        navbar.on("click", "a[data-toggle!=dropdown]", null, function () {
+           navbar.collapse('hide');
+        });
+
+        // envelop the dashboard container in a tab content div
+        dashboardContainer.wrapInner('<div class="tab-content"></div>');
+
+        pages.each(function(index) {
+
+          // lay it out
+          layoutDashboardPage($(this));
+
+          // add it to the navbar
+          addToNavbar($(this), index === 0);
+
+        });
+
+    } else {
+
+      // remove the navbar and navbar button if we don't
+      // have any navbuttons
+      if (navbarItems.length === 0) {
+        $('#navbar').remove();
+        $('#navbar-button').remove();
+      }
+
+      // add the storyboard class if requested
+      if (_options.storyboard)
+        dashboardContainer.addClass('storyboard');
+
+      // layout the entire page
+      layoutDashboardPage(dashboardContainer);
+    }
+
+    // if we are in shiny we need to trigger a window resize event to
+    // force correct layout of shiny-bound-output elements
+    if (isShinyDoc())
+      $(window).trigger('resize');
+
+    // make main components visible
+    $('.section.sidebar').css('visibility', 'visible');
+    dashboardContainer.css('visibility', 'visible');
+
+    // handle location hash
+    handleLocationHash();
+
+    // intialize prism highlighting
+    initPrismHighlighting();
+
+    // record mobile and orientation state then register a handler
+    // to refresh if resize_reload is set to true and it changes
+    _options.isMobile = isMobilePhone();
+    _options.isPortrait = isPortrait();
+    if (_options.resize_reload) {
+      $(window).on('resize', function() {
+        if (_options.isMobile !== isMobilePhone() ||
+            _options.isPortrait !== isPortrait()) {
+          window.location.reload();
+        }
+      });
+    } else {
+      // if in desktop mode and resizing to mobile, make sure the heights are 100%
+      // This enforces what `fillpage.css` does for "wider" pages.
+      // Since we are not reloading once the page becomes small, we need to force the height to 100%
+      // This is a new situation introduced when `_options.resize_reload` is `false`
+      if (! _options.isMobile) {
+        // only add if `fillpage.css` was added in the first place
+        if (_options.fillPage) {
+          // fillpage.css
+          $("html,body,#dashboard").css("height", "100%");
+        }
+      }
+    }
+    // trigger layoutcomplete event
+    dashboardContainer.trigger('flexdashboard:layoutcomplete');
+  }
+
+  function resolveMobileClasses(dashboardContainer) {
+     // add top level layout class
+    dashboardContainer.addClass(isMobilePhone() ? 'mobile-layout' :
+                                                  'desktop-layout');
+
+    // look for .mobile sections and add .no-mobile to their peers
+    var mobileSections = $('.section.mobile');
+    mobileSections.each(function() {
+       var id = $(this).attr('id');
+       var nomobileId = id.replace(/-\d+$/, '');
+       $('#' + nomobileId).addClass('no-mobile');
+    });
+  }
+
+  function addNavbarItems(navbarItems) {
+
+    var navbarLeft = $('ul.navbar-left');
+    var navbarRight = $('ul.navbar-right');
+
+    for (var i = 0; i<navbarItems.length; i++) {
+
+      // get the item
+      var item = navbarItems[i];
+
+      // determine the container
+      var container = null;
+      if (item.align === "left")
+        container = navbarLeft;
+      else
+        container = navbarRight;
+
+      // navbar menu if we have multiple items
+      if (item.items) {
+        var menu = navbarMenu(null, item.icon, item.title, container);
+        for (var j = 0; j<item.items.length; j++) {
+          var subItem = item.items[j];
+          var li = $('<li></li>');
+          li.append(navbarLink(subItem.icon, subItem.title, subItem.href, subItem.target));
+          menu.append(li);
+        }
+      } else {
+        var li = $('<li></li>');
+        li.append(navbarLink(item.icon, item.title, item.href, item.target));
+        container.append(li);
+      }
+    }
+  }
+
+  // create or get a reference to an existing dropdown menu
+  function navbarMenu(id, icon, title, container) {
+    var existingMenu = [];
+    if (id)
+      existingMenu = container.children('#' + id);
+    if (existingMenu.length > 0) {
+      return existingMenu.children('ul');
+    } else {
+      var li = $('<li></li>');
+      if (id)
+        li.attr('id', id);
+      li.addClass('dropdown');
+      // auto add "Share" title on mobile if necessary
+      if (!title && icon && (icon === "fa-share-alt") && isMobilePhone())
+        title = "Share";
+      if (title) {
+        title = title + ' <span class="caret"></span>';
+      }
+      var a = navbarLink(icon, title, "#");
+      a.addClass('dropdown-toggle');
+      a.attr('data-toggle', 'dropdown');
+      a.attr('role', 'button');
+      a.attr('aria-expanded', 'false');
+      li.append(a);
+      var ul = $('<ul class="dropdown-menu"></ul>');
+      ul.attr('role', 'menu');
+      li.append(ul);
+      container.append(li);
+      return ul;
+    }
+  }
+
+  function addToNavbar(page, active) {
+
+    // capture the id and data-icon attribute (if any)
+    var id = page.attr('id');
+    var icon = page.attr('data-icon');
+    var navmenu = page.attr('data-navmenu');
+
+    // get hidden state (transfer this to navbar)
+    var hidden = page.hasClass('hidden');
+    page.removeClass('hidden');
+
+    // sanitize the id for use with bootstrap tabs
+    id = id.replace(/[.\/?&!#<>]/g, '').replace(/\s/g, '_');
+    page.attr('id', id);
+
+    // get the wrapper
+    var wrapper = page.closest('.dashboard-page-wrapper');
+
+    // move the id to the wrapper
+    page.removeAttr('id');
+    wrapper.attr('id', id);
+
+    // add the tab-pane class to the wrapper
+    wrapper.addClass('tab-pane');
+    if (active)
+      wrapper.addClass('active');
+
+    // get a reference to the h1, discover its inner contens, then detach it
+    var h1 = wrapper.find('h1').first();
+    var title = h1.contents();
+    h1.detach();
+
+    // create a navbar item
+    var li = $('<li></li>');
+    var a = navbarLink(icon, title, '#' + id);
+    a.attr('data-toggle', 'tab');
+    li.append(a);
+
+    // add it to the navbar (or navbar menu if specified)
+    var container = $('ul.navbar-left');
+    if (navmenu) {
+      var menuId = navmenu.replace(/\s+/g, '');
+      var menu = navbarMenu(menuId, null, navmenu, container);
+      menu.append(li);
+    } else {
+      container.append(li);
+    }
+
+    // hide it if requested
+    if (hidden)
+      li.addClass('hidden');
+  }
+
+  function navbarLink(icon, title, href, target) {
+
+    var a = $('<a></a>');
+    if (icon) {
+
+      // get the name of the icon set and icon
+      var dashPos = icon.indexOf("-");
+      var iconSet = null;
+      var iconSplit = icon.split(" ");
+      if (iconSplit.length > 1) {
+        iconSet = iconSplit[0];
+        icon = iconSplit.slice(1).join(" ");
+      } else {
+        iconSet = icon.substring(0, dashPos);
+      }
+      var iconName = icon.substring(dashPos + 1);
+
+      // create the icon
+      var iconElement = $('<span class="' + iconSet + ' ' + icon + '"></span>');
+      if (title)
+        iconElement.css('margin-right', '7px');
+      a.append(iconElement);
+      // if href is null see if we can auto-generate based on icon (e.g. social)
+      if (!href)
+        maybeGenerateLinkFromIcon(iconName, a);
+    }
+    if (title)
+      a.append(title);
+
+    // add the href.
+    if (href) {
+      if (href === "source_embed") {
+        a.attr('href', '#');
+        a.attr('data-featherlight', "#flexdashboard-source-code");
+        a.featherlight({
+            beforeOpen: function(event){
+              $('body').addClass('unselectable');
+            },
+            afterClose: function(event){
+              $('body').removeClass('unselectable');
+            }
+        });
+      } else {
+        a.attr('href', href);
+      }
+    }
+
+    // add the arget
+    if (target)
+      a.attr('target', target);
+
+    return a;
+  }
+
+  // auto generate a link from an icon name (e.g. twitter) when possible
+  function maybeGenerateLinkFromIcon(iconName, a) {
+
+     var serviceLinks = {
+      "twitter": "https://twitter.com/share?text=" + encodeURIComponent(document.title) + "&url="+encodeURIComponent(location.href),
+      "facebook": "https://www.facebook.com/sharer/sharer.php?s=100&p[url]="+encodeURIComponent(location.href),
+      "google-plus": "https://plus.google.com/share?url="+encodeURIComponent(location.href),
+      "linkedin": "https://www.linkedin.com/shareArticle?mini=true&url="+encodeURIComponent(location.href) + "&title=" + encodeURIComponent(document.title),
+      "pinterest": "https://pinterest.com/pin/create/link/?url="+encodeURIComponent(location.href) + "&description=" + encodeURIComponent(document.title)
+    };
+
+    var makeSocialLink = function(a, href) {
+      a.attr('href', '#');
+      a.on('click', function(e) {
+        e.preventDefault();
+        window.open(href);
+      });
+    };
+
+    $.each(serviceLinks, function(key, value) {
+      if (iconName.indexOf(key) !== -1)
+        makeSocialLink(a, value);
+    });
+  }
+
+  // layout a dashboard page
+  function layoutDashboardPage(page) {
+
+    // use a page wrapper so that free form content above the
+    // dashboard appears at the top rather than the side (as it
+    // would without the wrapper in a column orientation)
+    var wrapper = $('<div class="dashboard-page-wrapper"></div>');
+    page.wrap(wrapper);
+
+    // if there are no level2 or level3 headers synthesize a level3
+    // header to contain the (e.g. frame it, scroll container, etc.)
+    var headers = page.find('h2,h3');
+    if (headers.length === 0)
+      page.wrapInner('<div class="section level3"></div>');
+
+    // hoist up any content before level 2 or level 3 headers
+    var children = page.children();
+    children.each(function(index) {
+      if ($(this).hasClass('level2') || $(this).hasClass('level3'))
+        return false;
+      $(this).insertBefore(page);
+    });
+
+    // determine orientation and fillPage behavior for distinct media
+    var orientation, fillPage, storyboard;
+
+    // media: mobile phone
+    if (isMobilePhone()) {
+
+      // if there is a sidebar we need to ensure it's content
+      // is properly framed as an h3
+      var sidebar = page.find('.section.sidebar');
+      sidebar.removeClass('sidebar');
+      sidebar.wrapInner('<div class="section level3"></div>');
+      var h2 = sidebar.find('h2');
+      var h3 = $('<h3></h3>');
+      h3.append(h2.contents());
+      h3.insertBefore(h2);
+      h2.detach();
+
+      // wipeout h2 elements then enclose them in a single h2
+      var level2 = page.find('div.section.level2');
+      level2.each(function() {
+        level2.children('h2').remove();
+        level2.children().unwrap();
+      });
+      page.wrapInner('<div class="section level2"></div>');
+
+      // substitute mobile images
+      if (isPortrait()) {
+        var mobileFigures = $('img.mobile-figure');
+        mobileFigures.each(function() {
+          // get the src (might be base64 encoded)
+          var src = $(this).attr('src');
+
+          // find it's peer
+          var id = $(this).attr('data-mobile-figure-id');
+          var img = $('img[data-figure-id=' + id + "]");
+          img.attr('src', src)
+             .attr('width', _options.defaultFigWidthMobile)
+             .attr('height', _options.defaultFigHeightMobile);
+        });
+      }
+
+      // hoist storyboard commentary into it's own section
+      if (page.hasClass('storyboard')) {
+        var commentaryHR = page.find('div.section.level3 hr');
+        commentaryHR.each(function() {
+          var commentary = $(this).nextAll().detach();
+          var commentarySection = $('<div class="section level3"></div>');
+          commentarySection.append(commentary);
+          commentarySection.insertAfter($(this).closest('div.section.level3'));
+          $(this).remove();
+        });
+      }
+
+      // force a non full screen layout by columns
+      orientation = _options.orientation = 'columns';
+      fillPage = _options.fillPage = false;
+      storyboard = _options.storyboard = false;
+
+    // media: desktop
+    } else {
+
+      // determine orientation
+      orientation = page.attr('data-orientation');
+      if (orientation !== 'rows' && orientation != 'columns')
+        orientation = _options.orientation;
+
+      // determine storyboard mode
+      storyboard = page.hasClass('storyboard');
+
+      // fillPage based on options (force for storyboard)
+      fillPage = _options.fillPage || storyboard;
+
+      // handle sidebar
+      var sidebar = page.find('.section.level2.sidebar');
+      if (sidebar.length > 0)
+        layoutSidebar(sidebar, page);
+    }
+
+    // give it and it's parent divs height: 100% if we are in fillPage mode
+    if (fillPage) {
+      page.addClass('vertical-layout-fill');
+      page.css('height', '100%');
+      page.parents('div').css('height', '100%');
+    } else {
+      page.addClass('vertical-layout-scroll');
+    }
+
+    // perform the layout
+    if (storyboard)
+      layoutPageAsStoryboard(page);
+    else if (orientation === 'rows')
+      layoutPageByRows(page, fillPage);
+    else if (orientation === 'columns')
+      layoutPageByColumns(page, fillPage);
+  }
+
+  function layoutSidebar(sidebar, content) {
+
+    // get it out of the header hierarchy
+    sidebar = sidebar.first();
+    if (sidebar.hasClass('level1')) {
+      sidebar.removeClass('level1');
+      sidebar.children('h1').remove();
+    } else if (sidebar.hasClass('level2')) {
+      sidebar.removeClass('level2');
+      sidebar.children('h2').remove();
+    }
+
+    // determine width
+    var sidebarWidth = isTablet() ? 220 : 250;
+    var dataWidth = parseInt(sidebar.attr('data-width'));
+    if (dataWidth)
+      sidebarWidth = dataWidth;
+
+    // set the width and shift the page right to accomodate the sidebar
+    sidebar.css('width', sidebarWidth + 'px');
+    content.css('padding-left', sidebarWidth + 'px');
+
+    // wrap it's contents in a form
+    sidebar.wrapInner($('<form></form>'));
+  }
+
+  function layoutPageAsStoryboard(page) {
+
+    // create storyboard navigation
+    var nav = $('<div class="storyboard-nav"></div>');
+
+    // add navigation buttons
+    var prev = $('<button class="sbprev"><i class="fa fa-angle-left"></i></button>');
+    nav.append(prev);
+    var next= $('<button class="sbnext"><i class="fa fa-angle-right"></i></button>');
+    nav.append(next);
+
+    // add navigation frame
+    var frameList = $('<div class="sbframelist"></div>');
+    nav.append(frameList);
+    var ul = $('<ul></ul>');
+    frameList.append(ul);
+
+     // find all the level3 sections (those are the storyboard frames)
+    var frames = page.find('div.section.level3');
+    frames.each(function() {
+
+      // mark it
+      $(this).addClass('sbframe');
+
+      // divide it into chart content and (optional) commentary
+      $(this).addClass('dashboard-column-orientation');
+
+      // stuff the chart into it's own div w/ flex
+      $(this).wrapInner('<div class="sbframe-component"></div>');
+      setFlex($(this), 1);
+      var frame = $(this).children('.sbframe-component');
+
+      // extract the title from the h3
+      var li = $('<li></li>');
+      var h3 = frame.children('h3');
+      li.append(h3.contents());
+      h3.detach();
+      ul.append(li);
+
+      // extract commentary
+      var hr = frame.children('hr');
+      if (hr.length) {
+        var commentary = hr.nextAll().detach();
+        hr.remove();
+        var commentaryFrame = $('<div class="sbframe-commentary"></div>');
+        commentaryFrame.addClass('flowing-content-shim');
+        commentaryFrame.addClass('flowing-content-container');
+        commentaryFrame.append(commentary);
+        $(this).append(commentaryFrame);
+
+        // look for a data-commentary-width attribute
+        var commentaryWidth = $(this).attr('data-commentary-width');
+        if (commentaryWidth)
+          commentaryFrame.css('width', commentaryWidth + 'px');
+      }
+
+      // layout the chart (force flex)
+      var result = layoutChart(frame, true);
+
+      // ice the notes if there are none
+      if (!result.notes)
+        frame.find('.chart-notes').remove();
+
+      // set flex on chart
+      setFlex(frame, 1);
+    });
+
+    // create a div to hold all the frames
+    var frameContent = $('<div class="sbframe-content"></div>');
+    frameContent.addClass('dashboard-row-orientation');
+    frameContent.append(frames.detach());
+
+    // row orientation to stack nav and frame content
+    page.addClass('dashboard-row-orientation');
+    page.append(nav);
+    page.append(frameContent);
+    setFlex(frameContent, 1);
+
+    // initialize sly
+    var sly = new Sly(frameList, {
+    		horizontal: true,
+    		itemNav: 'basic',
+    		smart: true,
+    		activateOn: 'click',
+    		startAt: 0,
+    		scrollBy: 1,
+    		activatePageOn: 'click',
+    		speed: 200,
+    		moveBy: 600,
+    		dragHandle: true,
+    		dynamicHandle: true,
+    		clickBar: true,
+    		keyboardNavBy: 'items',
+    		next: next,
+    		prev: prev
+    	}).init();
+
+    // make first frame active
+    frames.removeClass('active');
+    frames.first().addClass('active');
+
+    // subscribe to frame changed events
+    sly.on('active', function (eventName, itemIndex) {
+      frames.removeClass('active');
+      frames.eq(itemIndex).addClass('active')
+                          .trigger('shown');
+    });
+  }
+
+  function layoutPageByRows(page, fillPage) {
+
+    // row orientation
+    page.addClass('dashboard-row-orientation');
+
+    // find all the level2 sections (those are the rows)
+    var rows = page.find('div.section.level2');
+
+    // if there are no level2 sections then treat the
+    // entire page as if it's a level 2 section
+    if (rows.length === 0) {
+      page.wrapInner('<div class="section level2"></div>');
+      rows = page.find('div.section.level2');
+    }
+
+    rows.each(function () {
+
+      // flags
+      var haveNotes = false;
+      var haveFlexHeight = true;
+
+      // remove the h2
+      $(this).children('h2').remove();
+
+      // check for a tabset
+      var isTabset = $(this).hasClass('tabset');
+      if (isTabset)
+        layoutTabset($(this));
+
+      // give it row layout semantics if it's not a tabset
+      if (!isTabset)
+        $(this).addClass('dashboard-row');
+
+      // find all of the level 3 subheads
+      var columns = $(this).find('div.section.level3');
+
+      // determine figureSizes sizes
+      var figureSizes = chartFigureSizes(columns);
+
+      // fixup the columns
+      columns.each(function(index) {
+
+        // layout the chart (force flex if we are in a tabset)
+        var result = layoutChart($(this), isTabset);
+
+        // update flexHeight state
+        if (!result.flex)
+          haveFlexHeight = false;
+
+        // update state
+        if (result.notes)
+          haveNotes = true;
+
+        // set the column flex based on the figure width
+        // (value boxes will just get the default figure width)
+        var chartWidth = figureSizes[index].width;
+        setFlex($(this), chartWidth + ' ' + chartWidth + ' 0px');
+
+      });
+
+      // remove empty chart note divs
+      if (isTabset)
+        $(this).find('.chart-notes').filter(function() {
+            return $(this).html() === "&nbsp;";
+        }).remove();
+      if (!haveNotes)
+        $(this).find('.chart-notes').remove();
+
+       // make it a flexbox row
+      if (haveFlexHeight)
+        $(this).addClass('dashboard-row-flex');
+
+      // now we can set the height on all the wrappers (based on maximum
+      // figure height + room for title and notes, or data-height on the
+      // container if specified). However, don't do this if there is
+      // no flex on any of the constituent columns
+      var flexHeight = null;
+      var dataHeight = parseInt($(this).attr('data-height'));
+      if (dataHeight)
+        flexHeight = adjustedHeight(dataHeight, columns.first());
+      else if (haveFlexHeight)
+        flexHeight = maxChartHeight(figureSizes, columns);
+      if (flexHeight) {
+        if (fillPage)
+          setFlex($(this), flexHeight + ' ' + flexHeight + ' 0px');
+        else {
+          $(this).css('height', flexHeight + 'px');
+          setFlex($(this), '0 0 ' + flexHeight + 'px');
+        }
+      }
+
+    });
+  }
+
+  function layoutPageByColumns(page, fillPage) {
+
+    // column orientation
+    page.addClass('dashboard-column-orientation');
+
+    // find all the level2 sections (those are the columns)
+    var columns = page.find('div.section.level2');
+
+    // if there are no level2 sections then treat the
+    // entire page as if it's a level 2 section
+    if (columns.length === 0) {
+      page.wrapInner('<div class="section level2"></div>');
+      columns = page.find('div.section.level2');
+    }
+
+    // layout each column
+    columns.each(function (index) {
+
+      // remove the h2
+      $(this).children('h2').remove();
+
+      // make it a flexbox column
+      $(this).addClass('dashboard-column');
+
+      // check for a tabset
+      var isTabset = $(this).hasClass('tabset');
+      if (isTabset)
+        layoutTabset($(this));
+
+      // find all the h3 elements
+      var rows = $(this).find('div.section.level3');
+
+      // get the figure sizes for the rows
+      var figureSizes = chartFigureSizes(rows);
+
+      // column flex is the max row width (or data-width if specified)
+      var flexWidth;
+      var dataWidth = parseInt($(this).attr('data-width'));
+      if (dataWidth)
+        flexWidth = dataWidth;
+      else
+        flexWidth = maxChartWidth(figureSizes);
+      setFlex($(this), flexWidth + ' ' + flexWidth + ' 0px');
+
+      // layout each chart
+      rows.each(function(index) {
+
+        // perform the layout
+        var result = layoutChart($(this), false);
+
+        // ice the notes if there are none
+        if (!result.notes)
+          $(this).find('.chart-notes').remove();
+
+        // set flex height based on figHeight, then adjust
+        if (result.flex) {
+          var chartHeight = figureSizes[index].height;
+          chartHeight = adjustedHeight(chartHeight, $(this));
+          if (fillPage)
+            setFlex($(this), chartHeight + ' ' + chartHeight + ' 0px');
+          else {
+            $(this).css('height', chartHeight + 'px');
+            setFlex($(this), chartHeight + ' ' + chartHeight + ' ' + chartHeight + 'px');
+          }
+        }
+      });
+    });
+  }
+
+  function chartFigureSizes(charts) {
+
+    // sizes
+    var figureSizes = new Array(charts.length);
+
+    // check each chart
+    charts.each(function(index) {
+
+      // start with default
+      figureSizes[index] = {
+        width: _options.defaultFigWidth,
+        height: _options.defaultFigHeight
+      };
+
+      // look for data-height or data-width then knit options
+      var dataWidth = parseInt($(this).attr('data-width'));
+      var dataHeight = parseInt($(this).attr('data-height'));
+      var knitrOptions = $(this).find('.knitr-options:first');
+      var knitrWidth, knitrHeight;
+      if (knitrOptions) {
+        knitrWidth = parseInt(knitrOptions.attr('data-fig-width'));
+        knitrHeight =  parseInt(knitrOptions.attr('data-fig-height'));
+      }
+
+      // width
+      if (dataWidth)
+        figureSizes[index].width = dataWidth;
+      else if (knitrWidth)
+        figureSizes[index].width = knitrWidth;
+
+      // height
+      if (dataHeight)
+        figureSizes[index].height = dataHeight;
+      else if (knitrHeight)
+        figureSizes[index].height = knitrHeight;
+    });
+
+    // return sizes
+    return figureSizes;
+  }
+
+  function maxChartHeight(figureSizes, charts) {
+
+    // first compute the maximum height
+    var maxHeight = _options.defaultFigHeight;
+    for (var i = 0; i<figureSizes.length; i++)
+      if (figureSizes[i].height > maxHeight)
+        maxHeight = figureSizes[i].height;
+
+    // now add offests for chart title and chart notes
+    if (charts.length)
+      maxHeight = adjustedHeight(maxHeight, charts.first());
+
+    return maxHeight;
+  }
+
+  function adjustedHeight(height, chart) {
+    if (chart.length > 0) {
+      var chartTitle = chart.find('.chart-title');
+      if (chartTitle.length)
+        height += chartTitle.first().outerHeight();
+      var chartNotes = chart.find('.chart-notes');
+      if (chartNotes.length)
+        height += chartNotes.first().outerHeight();
+    }
+    return height;
+  }
+
+  function maxChartWidth(figureSizes) {
+    var maxWidth = _options.defaultFigWidth;
+    for (var i = 0; i<figureSizes.length; i++)
+      if (figureSizes[i].width > maxWidth)
+        maxWidth = figureSizes[i].width;
+    return maxWidth;
+  }
+
+  // layout a chart
+  function layoutChart(chart, forceFlex) {
+
+    // state to return
+    var result = {
+      notes: false,
+      flex: false
+    };
+
+    // extract the title
+    var title = extractTitle(chart);
+
+    // find components that apply to this container
+    var components = componentsFind(chart);
+
+    // if it's a custom component then call it and return
+    var customComponents = componentsCustom(components);
+    if (customComponents.length) {
+      componentsLayout(customComponents, title, chart);
+      result.notes = false;
+      result.flex = forceFlex || componentsFlex(customComponents);
+      return result;
+    }
+
+    // put all the content in a chart wrapper div
+    chart.addClass('chart-wrapper');
+    chart.wrapInner('<div class="chart-stage"></div>');
+    var chartContent = chart.children('.chart-stage');
+
+    // flex the content if appropriate
+    result.flex = forceFlex || componentsFlex(components);
+    if (result.flex) {
+      // add flex classes
+      chart.addClass('chart-wrapper-flex');
+      chartContent.addClass('chart-stage-flex');
+
+      // additional shim to break out of flexbox sizing
+      chartContent.wrapInner('<div class="chart-shim"></div>');
+      chartContent = chartContent.children('.chart-shim');
+    }
+
+    // set custom data-padding attribute
+    var pad = chart.attr('data-padding');
+    if (pad) {
+      if (pad === "0")
+        chart.addClass('no-padding');
+      else {
+        pad = pad + 'px';
+        chartContent.css('left', pad)
+                    .css('top', pad)
+                    .css('right', pad)
+                    .css('bottom', pad)
+      }
+    }
+
+    // call compoents
+    componentsLayout(components, title, chartContent);
+
+    // also activate components on shiny output
+    findShinyOutput(chartContent).on('shiny:value',
+      function(event) {
+        var element = $(event.target);
+        setTimeout(function() {
+
+          // see if we opted out of flex based on our output (for shiny
+          // we can't tell what type of output we have until after the
+          // value is bound)
+          var components = componentsFind(element);
+          var flex = forceFlex || componentsFlex(components);
+          if (!flex) {
+            chart.css('height', "");
+            setFlex(chart, "");
+            chart.removeClass('chart-wrapper-flex');
+            chartContent.removeClass('chart-stage-flex');
+            chartContent.children().unwrap();
+          }
+
+          // perform layout
+          componentsLayout(components, title, element.parent());
+        }, 10);
+      });
+
+    // add the title
+    var chartTitle = $('<div class="chart-title"></div>');
+    chartTitle.append(title);
+    chart.prepend(chartTitle);
+
+    // add the notes section
+    var chartNotes = $('<div class="chart-notes"></div>');
+    chartNotes.html('&nbsp;');
+    chart.append(chartNotes);
+
+    // attempt to extract notes if we have a component
+    if (components.length)
+      result.notes = extractChartNotes(chartContent, chartNotes);
+
+    // return result
+    return result;
+  }
+
+  // build a tabset from a section div with the .tabset class
+  function layoutTabset(tabset) {
+
+    // check for fade option
+    var fade = tabset.hasClass("tabset-fade");
+    var navClass = "nav-tabs";
+
+    // determine the heading level of the tabset and tabs
+    var match = tabset.attr('class').match(/level(\d) /);
+    if (match === null)
+      return;
+    var tabsetLevel = Number(match[1]);
+    var tabLevel = tabsetLevel + 1;
+
+    // find all subheadings immediately below
+    var tabs = tabset.find("div.section.level" + tabLevel);
+    if (!tabs.length)
+      return;
+
+    // create tablist and tab-content elements
+    var tabList = $('<ul class="nav ' + navClass + '" role="tablist"></ul>');
+    $(tabs[0]).before(tabList);
+    var tabContent = $('<div class="tab-content"></div>');
+    $(tabs[0]).before(tabContent);
+
+    // build the tabset
+    tabs.each(function(i) {
+
+      // get the tab div
+      var tab = $(tabs[i]);
+
+      // get the id then sanitize it for use with bootstrap tabs
+      var id = tab.attr('id');
+
+      // sanitize the id for use with bootstrap tabs
+      id = id.replace(/[.\/?&!#<>]/g, '').replace(/\s/g, '_');
+      tab.attr('id', id);
+
+      // get the heading element within it and grab it's text
+      var heading = tab.find('h' + tabLevel + ':first');
+      var headingDom = heading.contents();
+
+      // build and append the tab list item
+      var a = $('<a role="tab" data-toggle="tab"></a>');
+      a.append(headingDom);
+      a.attr('href', '#' + id);
+      a.attr('aria-controls', id);
+      var li = $('<li role="presentation"></li>');
+      li.append(a);
+      if (i === 0)
+        li.attr('class', 'active');
+      tabList.append(li);
+
+      // set it's attributes
+      tab.attr('role', 'tabpanel');
+      tab.addClass('tab-pane');
+      tab.addClass('tabbed-pane');
+      tab.addClass('no-title');
+      if (fade)
+        tab.addClass('fade');
+      if (i === 0) {
+        tab.addClass('active');
+        if (fade)
+          tab.addClass('in');
+      }
+
+      // move it into the tab content div
+      tab.detach().appendTo(tabContent);
+    });
+
+    // add nav-tabs-custom
+    tabset.addClass('nav-tabs-custom');
+
+    // internal layout is dashboard-column with tab-content flexing
+    tabset.addClass('dashboard-column');
+    setFlex(tabContent, 1);
+  }
+
+  // one time global initialization for components
+  function componentsInit(dashboardContainer) {
+    for (var i=0; i<window.FlexDashboardComponents.length; i++) {
+      var component = window.FlexDashboardComponents[i];
+      if (component.init)
+        component.init(dashboardContainer);
+    }
+  }
+
+  // find components that apply within a container
+  function componentsFind(container) {
+
+    // look for components
+    var components = [];
+    for (var i=0; i<window.FlexDashboardComponents.length; i++) {
+      var component = window.FlexDashboardComponents[i];
+      if (component.find(container).length)
+        components.push(component);
+    }
+
+    // if there were none then use a special flowing content component
+    // that just adds a scrollbar in fillPage mode
+    if (components.length == 0) {
+      components.push({
+        find: function(container) {
+          return container;
+        },
+
+        flex: function(fillPage) {
+          return fillPage;
+        },
+
+        layout: function(title, container, element, fillPage) {
+          if (fillPage) {
+            container.addClass('flowing-content-shim');
+            container.addClass('flowing-content-container');
+          }
+        }
+      });
+    }
+
+    return components;
+  }
+
+  // if there is a custom component then pick it out
+  function componentsCustom(components) {
+    var customComponent = [];
+    for (var i=0; i<components.length; i++)
+      if (components[i].type === "custom") {
+        customComponent.push(components[i]);
+        break;
+      }
+    return customComponent;
+  }
+
+  // query all components for flex
+  function componentsFlex(components) {
+
+    // no components at all means no flex
+    if (components.length === 0)
+      return false;
+
+    // otherwise query components (assume true unless we see false)
+    var isMobile = isMobilePhone();
+    for (var i=0; i<components.length; i++)
+      if (components[i].flex && !components[i].flex(_options.fillPage))
+        return false;
+    return true;
+  }
+
+  // layout all components
+  function componentsLayout(components, title, container) {
+    var isMobile = isMobilePhone();
+    for (var i=0; i<components.length; i++) {
+      var element = components[i].find(container);
+      if (components[i].layout) {
+        // call layout (don't call other components if it returns false)
+        var result = components[i].layout(title, container, element, _options.fillPage);
+        if (result === false)
+          return;
+      }
+    }
+  }
+
+  // get a reference to the h3, discover it's inner html, and remove it
+  function extractTitle(container) {
+    var h3 = container.children('h3').first();
+    var title = '';
+    if (!container.hasClass('no-title'))
+      title = h3.contents();
+    h3.detach();
+    return title;
+  }
+
+  // extract chart notes
+  function extractChartNotes(chartContent, chartNotes) {
+    // look for a terminating blockquote or image caption
+    var blockquote = chartContent.children('blockquote:last-child');
+    var caption = chartContent.children('div.image-container')
+                              .children('p.caption');
+    if (blockquote.length) {
+      chartNotes.empty().append(blockquote.children('p:first-child').contents());
+      blockquote.remove();
+      return true;
+    } else if (caption.length) {
+      chartNotes.empty().append(caption.contents());
+      caption.remove();
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  function findShinyOutput(chartContent) {
+    return chartContent.find('.shiny-text-output, .shiny-html-output');
+  }
+
+  // safely detect rendering on a mobile phone
+  function isMobilePhone() {
+    try
+    {
+      return ! window.matchMedia("only screen and (min-width: 768px)").matches;
+    }
+    catch(e) {
+      return false;
+    }
+  }
+
+  function isFillPage() {
+    return _options.fillPage;
+  }
+
+  // detect portrait mode
+  function isPortrait() {
+    return ($(window).width() < $(window).height());
+  }
+
+  // safely detect rendering on a tablet
+  function isTablet() {
+    try
+    {
+      return window.matchMedia("only screen and (min-width: 769px) and (max-width: 992px)").matches;
+    }
+    catch(e) {
+      return false;
+    }
+  }
+
+  // test whether this is a shiny doc
+  function isShinyDoc() {
+    return (typeof(window.Shiny) !== "undefined" && !!window.Shiny.outputBindings);
+  }
+
+  // set flex using vendor specific prefixes
+  function setFlex(el, flex) {
+    el.css('-webkit-box-flex', flex)
+      .css('-webkit-flex', flex)
+      .css('-ms-flex', flex)
+      .css('flex', flex);
+  }
+
+  // support bookmarking of pages
+  function handleLocationHash() {
+
+    // restore tab/page from bookmark
+    var hash = window.decodeURIComponent(window.location.hash);
+    if (hash.length > 0)
+      $('ul.nav a[href="' + hash + '"]').tab('show');
+    FlexDashboardUtils.manageActiveNavbarMenu();
+
+    // navigate to a tab when the history changes
+    window.addEventListener("popstate", function(e) {
+      var hash = window.decodeURIComponent(window.location.hash);
+      var activeTab = $('ul.nav a[href="' + hash + '"]');
+      if (activeTab.length) {
+        activeTab.tab('show');
+      } else {
+        $('ul.nav a:first').tab('show');
+      }
+      FlexDashboardUtils.manageActiveNavbarMenu();
+    });
+
+    // add a hash to the URL when the user clicks on a tab/page
+    $('.navbar-nav a[data-toggle="tab"]').on('click', function(e) {
+      var baseUrl = FlexDashboardUtils.urlWithoutHash(window.location.href);
+      var hash = FlexDashboardUtils.urlHash($(this).attr('href'));
+      var href = baseUrl + hash;
+      FlexDashboardUtils.setLocation(href);
+    });
+
+    // handle clicks of other links that should activate pages
+    var navPages = $('ul.navbar-nav li a[data-toggle=tab]');
+    navPages.each(function() {
+      var href =  $(this).attr('href');
+      var links = $('a[href="' + href + '"][data-toggle!=tab]');
+      links.each(function() {
+        $(this).on('click', function(e) {
+          window.FlexDashboardUtils.showPage(href);
+        });
+      });
+    });
+  }
+
+  // tweak Prism highlighting
+  function initPrismHighlighting() {
+
+    if (window.Prism) {
+      Prism.languages.insertBefore('r', 'comment', {
+        'heading': [
+          {
+            // title 1
+        	  // =======
+
+        	  // title 2
+        	  // -------
+        	  pattern: /\w+.*(?:\r?\n|\r)(?:====+|----+)/,
+            alias: 'operator'
+          },
+          {
+            // ### title 3
+            pattern: /(^\s*)###[^#].+/m,
+            lookbehind: true,
+            alias: 'operator'
+          }
+        ]
+      });
+
+      // prism highlight
+      Prism.highlightAll();
+    }
+  }
+
+
+  // get theme color
+  var themeColors = {
+    bootstrap: {
+      primary: "rgba(51, 122, 183, 0.4)",
+      info: "rgb(217, 237, 247)",
+      success: "rgb(223, 240, 216)",
+      warning: "rgb(252, 248, 227)",
+      danger: "rgb(242, 222, 222)"
+    },
+    cerulean: {
+      primary: "rgb(47, 164, 231)",
+      info: "rgb(217, 237, 247)",
+      success: "rgb(223, 240, 216)",
+      warning: "rgb(252, 248, 227)",
+      danger: "rgb(242, 222, 222)"
+    },
+    journal: {
+      primary: "rgba(235, 104, 100, 0.70)",
+      info: "rgb(217, 237, 247)",
+      success: "rgb(223, 240, 216)",
+      warning: "rgb(252, 248, 227)",
+      danger: "rgb(242, 222, 222)"
+    },
+    flatly: {
+      primary: "rgba(44, 62, 80, 0.70)",
+      info: "rgba(52, 152, 219, 0.70)",
+      success: "rgba(24, 188, 156, 0.70)",
+      warning: "rgba(243, 156, 18, 0.70)",
+      danger: "rgba(231, 76, 60, 0.70)"
+    },
+    readable: {
+      primary: "rgba(69, 130, 236, 0.4)",
+      info: "rgb(217, 237, 247)",
+      success: "rgb(223, 240, 216)",
+      warning: "rgb(252, 248, 227)",
+      danger: "rgb(242, 222, 222)"
+    },
+    spacelab: {
+      primary: "rgba(68, 110, 155, 0.25)",
+      info: "rgb(217, 237, 247)",
+      success: "rgb(223, 240, 216)",
+      warning: "rgb(252, 248, 227)",
+      danger: "rgb(242, 222, 222)"
+    },
+    united: {
+      primary: "rgba(221, 72, 20, 0.30)",
+      info: "rgb(217, 237, 247)",
+      success: "rgb(223, 240, 216)",
+      warning: "rgb(252, 248, 227)",
+      danger: "rgb(242, 222, 222)"
+    },
+    cosmo: {
+      primary: "rgba(39, 128, 227, 0.7)",
+      info: "rgba(153, 84, 187, 0.7)",
+      success: "rgba(63, 182, 24, 0.7)",
+      warning: "rgba(255, 117, 24, 0.7)",
+      danger: "rgba(255, 0, 57, 0.7)"
+    },
+    lumen: {
+      primary: "rgba(21, 140, 186, 0.70)",
+      info: "rgba(117, 202, 235, 0.90)",
+      success: "rgba(40, 182, 44, 0.70)",
+      warning: "rgba(255, 133, 27, 0.70)",
+      danger: "rgba(255, 65, 54, 0.70)"
+    },
+    paper: {
+      primary: "rgba(33, 150, 243, 0.35)",
+      info: "rgb(225, 190, 231)",
+      success: "rgb(223, 240, 216)",
+      warning: "rgb(255, 224, 178)",
+      danger: "rgb(249, 189, 187)"
+    },
+    sandstone: {
+      primary: "rgba(50, 93, 136, 0.3)",
+      info: "rgb(217, 237, 247)",
+      success: "rgb(223, 240, 216)",
+      warning: "rgb(252, 248, 227)",
+      danger: "rgb(242, 222, 222)"
+    },
+    simplex: {
+      primary: "rgba(217, 35, 15, 0.25)",
+      info: "rgb(217, 237, 247)",
+      success: "rgb(223, 240, 216)",
+      warning: "rgb(252, 248, 227)",
+      danger: "rgb(242, 222, 222)"
+    },
+    yeti: {
+      primary: "rgba(0, 140, 186, 0.298039)",
+      info: "rgb(217, 237, 247)",
+      success: "rgb(223, 240, 216)",
+      warning: "rgb(252, 248, 227)",
+      danger: "rgb(242, 222, 222)"
+    }
+  }
+  function themeColor(color) {
+    return themeColors[_options.theme][color];
+  }
+
+  FlexDashboard.prototype = {
+    constructor: FlexDashboard,
+    init: init,
+    isMobilePhone: isMobilePhone,
+    isFillPage: isFillPage,
+    themeColor: themeColor
+  };
+
+  return FlexDashboard;
+
+})();
+
+// utils
+window.FlexDashboardUtils = {
+  resizableImage: function(img) {
+    var src = img.attr('src');
+    var url = 'url("' + src + '")';
+    img.parent().css('background', url)
+                .css('background-size', 'contain')
+                .css('background-repeat', 'no-repeat')
+                .css('background-position', 'center')
+                .addClass('image-container');
+  },
+  setLocation: function(href) {
+    if (history && history.pushState) {
+      history.pushState(null, null, href);
+    } else {
+      window.location.replace(href);
+    }
+    setTimeout(function() {
+        window.scrollTo(0, 0);
+    }, 10);
+    this.manageActiveNavbarMenu();
+  },
+  showPage: function(href) {
+    $('ul.navbar-nav li a[href="' + href + '"]').tab('show');
+    var baseUrl = this.urlWithoutHash(window.location.href);
+    var loc = baseUrl + href;
+    this.setLocation(loc);
+  },
+  showLinkedValue: function(href) {
+    // check for a page link
+    if ($('ul.navbar-nav li a[data-toggle=tab][href="' + href + '"]').length > 0)
+      this.showPage(href);
+    else
+      window.open(href);
+  },
+  urlWithoutHash: function(url) {
+    var hashLoc = url.indexOf('#');
+    if (hashLoc != -1)
+      return url.substring(0, hashLoc);
+    else
+      return url;
+  },
+  urlHash: function(url) {
+    var hashLoc = url.indexOf('#');
+    if (hashLoc != -1)
+      return url.substring(hashLoc);
+    else
+      return "";
+  },
+  manageActiveNavbarMenu: function () {
+    // remove active from anyone currently active
+    $('.navbar ul.nav').find('li').removeClass('active');
+    // find the active tab
+    var activeTab = $('.dashboard-page-wrapper.tab-pane.active');
+    if (activeTab.length > 0) {
+      var tabId = activeTab.attr('id');
+      if (tabId)
+        $(".navbar ul.nav a[href='#" + tabId + "']").parents('li').addClass('active');
+    }
+  }
+};
+
+window.FlexDashboard = new FlexDashboard();
+
+// empty content
+window.FlexDashboardComponents.push({
+  find: function(container) {
+    if (container.find('p').length == 0)
+      return container;
+    else
+      return $();
+  }
+})
+
+// plot image
+window.FlexDashboardComponents.push({
+
+  find: function(container) {
+    return container.children('p')
+                    .children('img:only-child');
+  },
+
+  layout: function(title, container, element, fillPage) {
+    FlexDashboardUtils.resizableImage(element);
+  }
+});
+
+// plot image (figure style)
+window.FlexDashboardComponents.push({
+
+  find: function(container) {
+    return container.children('div.figure').children('img');
+  },
+
+  layout: function(title, container, element, fillPage) {
+    FlexDashboardUtils.resizableImage(element);
+  }
+});
+
+// htmlwidget
+window.FlexDashboardComponents.push({
+
+  init: function(dashboardContainer) {
+    // trigger "shown" after initial layout to force static htmlwidgets
+    // in runtime: shiny to be resized after the dom has been transformed
+    dashboardContainer.on('flexdashboard:layoutcomplete', function(event) {
+      setTimeout(function() {
+        dashboardContainer.trigger('shown');
+      }, 200);
+    });
+  },
+
+  find: function(container) {
+    return container.children('div[id^="htmlwidget-"],div.html-widget');
+  }
+});
+
+// gauge
+window.FlexDashboardComponents.push({
+
+  find: function(container) {
+    return container.children('div.html-widget.gauge');
+  },
+
+  flex: function(fillPage) {
+    return false;
+  },
+
+  layout: function(title, container, element, fillPage) {
+
+
+  }
+
+});
+
+// shiny output
+window.FlexDashboardComponents.push({
+  find: function(container) {
+    return container.children('div[class^="shiny-"]');
+  }
+});
+
+// datatables
+window.FlexDashboardComponents.push({
+  find: function(container) {
+    return container.find('.datatables');
+  },
+  flex: function(fillPage) {
+    return fillPage;
+  }
+});
+
+// bootstrap table
+window.FlexDashboardComponents.push({
+
+  find: function(container) {
+    var bsTable = container.find('table.table');
+    if (bsTable.length !== 0)
+      return bsTable;
+    else
+      return container.find('tr.header').parent('thead').parent('table');
+  },
+
+  flex: function(fillPage) {
+    return fillPage;
+  },
+
+  layout: function(title, container, element, fillPage) {
+
+    // alias variables
+    var bsTable = element;
+
+    // fixup xtable generated tables with a proper thead
+    var headerRow = bsTable.find('tbody > tr:first-child > th').parent();
+    if (headerRow.length > 0) {
+      var thead = $('<thead></thead>');
+      bsTable.prepend(thead);
+      headerRow.detach().appendTo(thead);
+    }
+
+    // improve appearance
+    container.addClass('bootstrap-table');
+
+    // for fill page provide scrolling w/ sticky headers
+    if (fillPage) {
+      // force scrollbar on overflow
+      container.addClass('flowing-content-shim');
+
+      // stable table headers when scrolling
+      bsTable.stickyTableHeaders({
+        scrollableArea: container
+      });
+    }
+  }
+});
+
+// embedded shiny app
+window.FlexDashboardComponents.push({
+
+  find: function(container) {
+    return container.find('iframe.shiny-frame');
+  },
+
+  flex: function(fillPage) {
+    return fillPage;
+  },
+
+  layout: function(title, container, element, fillPage) {
+    if (fillPage) {
+      element.attr('height', '100%');
+    } else {
+      // provide default height if necessary
+      var height = element.get(0).style.height;
+      if (!height)
+        height = element.attr('height');
+      if (!height)
+        element.attr('height', 500);
+    }
+  }
+});
+
+// shiny fillRow or fillCol
+window.FlexDashboardComponents.push({
+
+  find: function(container) {
+    return container.find('.flexfill-container');
+  },
+
+  flex: function(fillPage) {
+    return fillPage;
+  },
+
+  layout: function(title, container, element, fillPage) {
+    if (fillPage)
+      element.css('height', '100%');
+    else {
+      // provide default height if necessary
+      var height = element.get(0).style.height;
+      if (height === "100%" || height === "auto" || height === "initial" ||
+          height === "inherit" || !height) {
+        element.css('height', 500);
+      }
+    }
+  }
+});
+
+// valueBox
+window.FlexDashboardComponents.push({
+
+  type: "custom",
+
+  find: function(container) {
+    if (container.find('span.value-output, .shiny-valuebox-output').length)
+      return container;
+    else
+      return $();
+  },
+
+  flex: function(fillPage) {
+    return false;
+  },
+
+  layout: function(title, container, element, fillPage) {
+
+    // alias variables
+    var chartTitle = title;
+    var valueBox = element;
+
+    // add value-box class to container
+    container.addClass('value-box');
+
+    // value paragraph
+    var value = $('<p class="value"></p>');
+
+    // if we have shiny-text-output then just move it in
+    var valueOutputSpan = [];
+    var shinyOutput = valueBox.find('.shiny-valuebox-output').detach();
+    if (shinyOutput.length) {
+      valueBox.children().remove();
+      shinyOutput.html("&mdash;");
+      value.append(shinyOutput);
+    } else {
+      // extract the value (remove leading vector index)
+      var chartValue = valueBox.text().trim();
+      chartValue = chartValue.replace("[1] ", "");
+      valueOutputSpan = valueBox.find('span.value-output').detach();
+      valueBox.children().remove();
+      value.text(chartValue);
+    }
+
+    // caption
+    var caption = $('<p class="caption"></p>');
+    caption.append(chartTitle);
+
+    // build inner div for value box and add it
+    var inner = $('<div class="inner"></div>');
+    inner.append(value);
+    inner.append(caption);
+    valueBox.append(inner);
+
+    // add icon if specified
+    var icon = $('<div class="icon"><i></i></div>');
+    valueBox.append(icon);
+    function setIcon(chartIcon) {
+      var iconLib = "";
+      var iconSplit = chartIcon.split(" ");
+      if (iconSplit.length > 1) {
+        iconLib = iconSplit[0];
+        chartIcon = iconSplit.slice(1).join(" ");
+      } else {
+        var components = chartIcon.split("-");
+        if (components.length > 1)
+          iconLib = components[0];
+      }
+      icon.children('i').attr('class', iconLib + ' ' + chartIcon);
+    }
+    var chartIcon = valueBox.attr('data-icon');
+    if (chartIcon)
+      setIcon(chartIcon);
+
+    // set color based on data-background if necessary
+    var dataBackground = valueBox.attr('data-background');
+    if (dataBackground)
+      valueBox.css('background-color', bgColor);
+    else {
+      // default to bg-primary if no other background is specified
+      if (!valueBox.hasClass('bg-primary') &&
+          !valueBox.hasClass('bg-info') &&
+          !valueBox.hasClass('bg-warning') &&
+          !valueBox.hasClass('bg-success') &&
+          !valueBox.hasClass('bg-danger')) {
+        valueBox.addClass('bg-primary');
+      }
+    }
+
+    // handle data attributes in valueOutputSpan
+    function handleValueOutput(valueOutput) {
+
+      // caption
+      var dataCaption = valueOutput.attr('data-caption');
+      if (dataCaption)
+        caption.html(dataCaption);
+
+      // icon
+      var dataIcon = valueOutput.attr('data-icon');
+      if (dataIcon)
+        setIcon(dataIcon);
+
+      // color
+      var dataColor = valueOutput.attr('data-color');
+      if (dataColor) {
+        if (dataColor.indexOf('bg-') === 0) {
+          valueBox.css('background-color', '');
+          if (!valueBox.hasClass(dataColor)) {
+             valueBox.removeClass('bg-primary bg-info bg-warning bg-danger bg-success');
+             valueBox.addClass(dataColor);
+          }
+        } else {
+          valueBox.removeClass('bg-primary bg-info bg-warning bg-danger bg-success');
+          valueBox.css('background-color', dataColor);
+        }
+      }
+
+      // url
+      var dataHref = valueOutput.attr('data-href');
+      if (dataHref) {
+        valueBox.addClass('linked-value');
+        valueBox.off('click.value-box');
+        valueBox.on('click.value-box', function(e) {
+          window.FlexDashboardUtils.showLinkedValue(dataHref);
+        });
+      }
+    }
+
+    // check for a valueOutputSpan
+    if (valueOutputSpan.length > 0) {
+      handleValueOutput(valueOutputSpan);
+    }
+
+    // if we have a shinyOutput then bind a listener to handle
+    // new valueOutputSpan values
+    shinyOutput.on('shiny:value',
+      function(event) {
+        var element = $(event.target);
+        setTimeout(function() {
+          var valueOutputSpan = element.find('span.value-output');
+          if (valueOutputSpan.length > 0)
+            handleValueOutput(valueOutputSpan);
+        }, 10);
+      }
+    );
+  }
+});
+</script>
+
+<div id="dashboard-container">
+
+<div id="row" class="section level2">
+<h2>Row</h2>
+<div id="active" class="section level3 value-box">
+<h3>active</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<span class="value-output" data-caption="Toplam Aktif Uçak" data-icon="fas fa-paper-plane" data-color="#8AA8A1">136</span>
+</div>
+<div id="tcregister" class="section level3 value-box">
+<h3>tcregister</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<span class="value-output" data-caption="TC Kayıtlı Uçaklar" data-icon="fas fa-flag" data-color="#885A89">70</span>
+</div>
+<div id="thy" class="section level3 value-box">
+<h3>THY</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<span class="value-output" data-caption="THY Uçakları" data-icon="fas fa-plane" data-color="#0053A5">37</span>
+</div>
+<div id="pgs" class="section level3 value-box">
+<h3>PGS</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<span class="value-output" data-caption="PGS Uçakları" data-icon="fas fa-plane" data-color="#FBA404">28</span>
+</div>
+</div>
+<div id="row-1" class="section level2 tabset">
+<h2>Row</h2>
+<div id="havadaki-uçakların-dağılımı" class="section level3">
+<h3>Havadaki Uçakların Dağılımı</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<div id="htmlwidget-c497756085b16b81a8a6" style="width:576px;height:460.8px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-c497756085b16b81a8a6">{"x":{"visdat":{"209c2ccc22e4":["function () ","plotlyVisDat"],"209c251b7bbe":["function () ","data"],"209c4ed611d8":["function () ","data"],"209c7566152d":["function () ","data"]},"cur_data":"209c7566152d","attrs":{"209c2ccc22e4":{"values":{},"labels":{},"parents":"Uçak Tipleri","domain":{"column":0},"textinfo":"label+value+percent parent","name":"Tip","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"treemap"},"209c251b7bbe":{"values":{},"labels":{},"parents":"Kalkış Havalimanları","domain":{"column":1},"textinfo":"label+value+percent parent","name":"Kalkış","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"treemap","hovertemplate":{},"inherit":true},"209c4ed611d8":{"values":{},"labels":{},"parents":"Varış Havalimanları","domain":{"column":2},"textinfo":"label+value+percent parent","name":"Varış","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"treemap","hovertemplate":{},"inherit":true},"209c7566152d":{"values":{},"labels":{},"parents":"Ticari Markalar","domain":{"column":3},"textinfo":"label+value+percent parent","name":"Marka","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"treemap","inherit":true}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"grid":{"columns":4,"rows":1},"hovermode":"closest","showlegend":true},"source":"A","config":{"showSendToCloud":false},"data":[{"values":[40,22,17,15,7,5,4,4,4,3,2,2,1,1,1,1,1,1,1,1,1,1,1],"labels":["B738","B77W","A20N","A320","A321","A21N","A333","A359","B788","B789","A388","B77L","A318","A319","A332","A343","A35K","B739","B748","B752","B763","B772","E190"],"parents":["Uçak Tipleri","Uçak Tipleri","Uçak Tipleri","Uçak Tipleri","Uçak Tipleri","Uçak Tipleri","Uçak Tipleri","Uçak Tipleri","Uçak Tipleri","Uçak Tipleri","Uçak Tipleri","Uçak Tipleri","Uçak Tipleri","Uçak Tipleri","Uçak Tipleri","Uçak Tipleri","Uçak Tipleri","Uçak Tipleri","Uçak Tipleri","Uçak Tipleri","Uçak Tipleri","Uçak Tipleri","Uçak Tipleri"],"domain":{"column":0},"textinfo":"label+value+percent parent","name":"Tip","type":"treemap","marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(255,255,255,1)"}},"frame":null},{"values":[22,20,8,6,5,4,4,4,4,3,3,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],"labels":["IST","SAW","AYT","TZX","ADB","AMS","ESB","LCA","LHR","CDG","FRA","ARN","BRU","CPH","DUS","KGS","LEJ","LUX","MAN","MXP","VIE","AMM","ATH","BCN","BHX","BLQ","CGN","DLM","DNK","DUB","DWC","DXB","EBB","ERZ","FCO","GLA","GVA","GZT","HAM","HRG","HTY","KYA","MJI","NOP","OSL","OTP","PFO","PRG","PRN","SHJ","SVO","SZF","VAN","ZRH"],"parents":["Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları","Kalkış Havalimanları"],"domain":{"column":1},"textinfo":"label+value+percent parent","name":"Kalkış","type":"treemap","hovertemplate":["Istanbul Airport - Turkey","Sabiha Gökçen International Airport - Turkey","Antalya International Airport - Turkey","Trabzon International Airport - Turkey","Adnan Menderes International Airport - Turkey","Amsterdam Airport Schiphol - Netherlands","Esenboğa International Airport - Turkey","Larnaca International Airport - Cyprus","London Heathrow Airport - United Kingdom","Charles de Gaulle International Airport - France","Frankfurt am Main Airport - Germany","Stockholm-Arlanda Airport - Sweden","Brussels Airport - Belgium","Copenhagen Kastrup Airport - Denmark","Düsseldorf Airport - Germany","Kos Airport - Greece","Leipzig/Halle Airport - Germany","Luxembourg-Findel International Airport - Luxembourg","Manchester Airport - United Kingdom","Malpensa International Airport - Italy","Vienna International Airport - Austria","Queen Alia International Airport - Jordan","Eleftherios Venizelos International Airport - Greece","Barcelona International Airport - Spain","Birmingham International Airport - United Kingdom","Bologna Guglielmo Marconi Airport - Italy","Cologne Bonn Airport - Germany","Dalaman International Airport - Turkey","Dnipropetrovsk International Airport - Ukraine","Dublin Airport - Ireland","Al Maktoum International Airport - United Arab Emirates","Dubai International Airport - United Arab Emirates","Entebbe International Airport - Uganda","Erzurum International Airport - Turkey","Leonardo da Vinci–Fiumicino Airport - Italy","Glasgow International Airport - United Kingdom","Geneva Cointrin International Airport - Switzerland","Gaziantep International Airport - Turkey","Hamburg Airport - Germany","Hurghada International Airport - Egypt","Hatay Airport - Turkey","Konya Airport - Turkey","Mitiga Airport - Libya","Sinop Airport - Turkey","Oslo Lufthavn - Norway","Henri Coandă International Airport - Romania","Paphos International Airport - Cyprus","Václav Havel Airport Prague - Czech Republic","Priština International Airport - Serbia","Sharjah International Airport - United Arab Emirates","Sheremetyevo International Airport - Russia","Samsun Çarşamba Airport - Turkey","Van Ferit Melen Airport - Turkey","Zürich Airport - Switzerland"],"marker":{"color":"rgba(255,127,14,1)","line":{"color":"rgba(255,255,255,1)"}},"frame":null},{"values":[20,11,10,9,6,5,5,5,4,4,4,3,3,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],"labels":["DXB","IST","DOH","SAW","ADB","ADA","KBP","OGU","AUH","SZF","TZX","ASR","RHO","AYT","BHX","DLM","ESB","EZS","HTY","OTP","TAS","ADD","AOE","ATH","BAH","BJV","BKK","BLR","BOM","CAI","DAC","DIY","DRS","ERZ","GNY","GZT","IKA","ISL","KYA","LGW","LUX","MNL","MUC","NAV","NCL","NOP","SOF","SVO","TLV","TUN","VAS","VKO"],"parents":["Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları","Varış Havalimanları"],"domain":{"column":2},"textinfo":"label+value+percent parent","name":"Varış","type":"treemap","hovertemplate":["Dubai International Airport - United Arab Emirates","Istanbul Airport - Turkey","Hamad International Airport - Qatar","Sabiha Gökçen International Airport - Turkey","Adnan Menderes International Airport - Turkey","Adana Airport - Turkey","Boryspil International Airport - Ukraine","Ordu Giresun Airport - Turkey","Abu Dhabi International Airport - United Arab Emirates","Samsun Çarşamba Airport - Turkey","Trabzon International Airport - Turkey","Kayseri Erkilet Airport - Turkey","Diagoras Airport - Greece","Antalya International Airport - Turkey","Birmingham International Airport - United Kingdom","Dalaman International Airport - Turkey","Esenboğa International Airport - Turkey","Elazığ Airport - Turkey","Hatay Airport - Turkey","Henri Coandă International Airport - Romania","Tashkent International Airport - Uzbekistan","Addis Ababa Bole International Airport - Ethiopia","Anadolu Airport - Turkey","Eleftherios Venizelos International Airport - Greece","Bahrain International Airport - Bahrain","Milas Bodrum International Airport - Turkey","Suvarnabhumi Airport - Thailand","Kempegowda International Airport - India","Chhatrapati Shivaji International Airport - India","Cairo International Airport - Egypt","Hazrat Shahjalal International Airport - Bangladesh","Diyarbakir Airport - Turkey","Dresden Airport - Germany","Erzurum International Airport - Turkey","Şanlıurfa GAP Airport - Turkey","Gaziantep International Airport - Turkey","Imam Khomeini International Airport - Iran","Atatürk International Airport - Turkey","Konya Airport - Turkey","London Gatwick Airport - United Kingdom","Luxembourg-Findel International Airport - Luxembourg","Ninoy Aquino International Airport - Philippines","Munich Airport - Germany","Nevşehir Kapadokya Airport - Turkey","Newcastle Airport - United Kingdom","Sinop Airport - Turkey","Sofia Airport - Bulgaria","Sheremetyevo International Airport - Russia","Ben Gurion International Airport - Israel","Tunis Carthage International Airport - Tunisia","Sivas Nuri Demirağ Airport - Turkey","Vnukovo International Airport - Russia"],"marker":{"color":"rgba(44,160,44,1)","line":{"color":"rgba(255,255,255,1)"}},"frame":null},{"values":[37,28,19,10,5,4,4,3,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],"labels":["THY","PGT","UAE","QTR","SXS","ETD","TUI","AUI","AEE","SDR","ABG","ABY","AFL","AFR","AIC","AZV","BAW","BRQ","CLX","DHK","DLH","EXS","FDB","HES","HFY","LBT","MSR","RJA","ROT","THA","UZB","WRC"],"parents":["Ticari Markalar","Ticari Markalar","Ticari Markalar","Ticari Markalar","Ticari Markalar","Ticari Markalar","Ticari Markalar","Ticari Markalar","Ticari Markalar","Ticari Markalar","Ticari Markalar","Ticari Markalar","Ticari Markalar","Ticari Markalar","Ticari Markalar","Ticari Markalar","Ticari Markalar","Ticari Markalar","Ticari Markalar","Ticari Markalar","Ticari Markalar","Ticari Markalar","Ticari Markalar","Ticari Markalar","Ticari Markalar","Ticari Markalar","Ticari Markalar","Ticari Markalar","Ticari Markalar","Ticari Markalar","Ticari Markalar","Ticari Markalar"],"domain":{"column":3},"textinfo":"label+value+percent parent","name":"Marka","type":"treemap","marker":{"color":"rgba(214,39,40,1)","line":{"color":"rgba(255,255,255,1)"}},"frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="harita" class="section level3">
+<h3>Harita</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<div id="htmlwidget-3e4ef9b5f0c79190e56d" style="width:576px;height:460.8px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-3e4ef9b5f0c79190e56d">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"setView":[[38.5585,35.0025],5.4,[]],"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addCircleMarkers","args":[[38.16,39.97,40.81,37.48,36.98,38.3,38.11,38.29,40.68,40.01,40.76,40.46,41.82,38.95,40.27,40.91,36.94,37.56,37.06,36.27,37.71,36.97,40.89,40.22,37.72,37.44,40.05,41.89,42,39.66,37.73,40.26,39.37,37.09,38.78,41.97,41.26,41.36,41,41.81,41.64,36.8,39.39,39.42,41.45,37.55,40.48,40.76,39.82,40.87,40.27,40.55,40.01,39.33,38.93,38.09,40.82,39.26,38.38,41.32,38.33,38.96,41.42,40.52,38.86,36.92,40.16,41,40.3,39.65,38.93,40.9,38.8,38.34,38.74,41.27,38.52,40.35,40.98,41.07,38.33,40.77,37.2,38.27,41.26,41.95,38,37.87,40.01,41.23,37.55,38.2,40.37,41.1,36.89,35.95,41.27,39.13,39.31,36.9,41.75,41.1,40.79,40.91,40.94,41.47,41.27,41.68,36.4,36.48,36.4,40.87,38.61,41.28,40.12,40.9,41.08,41,39.57,39.86,41.26,40.98,40.56,41.35,40.8,37.16,40.2,41.26,37.74,41.35,40.46,40.2,38.28,40.91,39.91,40.39],[28,37.87,29.89,34.82,35.3,27.15,27.21,27.15,37.96,28.14,34.76,29.08,26.67,35.58,32.34,29.32,26.36,42.69,41.76,41.51,39.94,30.68,29.29,37,27.67,27.98,28.93,42.92,35.44,42.18,27.33,31.93,35.24,28.6,31.35,26.24,28.74,33.23,31.03,31.74,32.54,44.12,38.4,36.24,33.47,26.51,37.04,31.58,38.13,34.44,36.82,35.61,38.55,39.76,41.67,43.74,34.8,39.15,43.42,33.32,43.22,40.19,33.23,35.73,42.22,27.41,34.49,39.79,33.26,34.34,38.09,29.29,34.8,32.76,33.86,28.74,30.46,35.46,29.03,26.08,27.14,38.51,30.68,30.62,28.73,33.62,32.57,36.2,30.23,29.51,43.01,42.54,30.09,29.03,28.57,28.45,28.56,26,33.5,26.87,31.47,37.44,32.76,35.28,38.56,38.8,28.73,28.37,28.09,27.93,28.09,29.24,42.22,28.38,32.99,29.31,39.41,38.91,29.73,31.12,28.74,33.84,32.33,36.27,33.65,30.85,33.8,28.74,33.11,28.73,33.71,37.28,27.16,29.32,36,33.55],10,null,null,{"interactive":true,"className":"","stroke":true,"color":"#FBA404","weight":5,"opacity":3,"fill":true,"fillColor":"#FBA404","fillOpacity":0.2},null,null,["PC3014\tADB\tADA\tA320\tTC-DCI","PC3707\tTZX\tADA\tB738\tTC-CPB","TK2470\tIST\tADA\tA321\tTC-JRC","TK7262\tSAW\tADA\tB738\tTC-JFG","PC2094\tSAW\tADA\tA20N\tTC-NBO","XQ983\tCGN\tADB\tB738\tTC-SPC","XQ959\tDUS\tADB\tB738\tTC-SOH","PC2198\tSAW\tADB\tB738\tTC-CRB","PC3241\tTZX\tADB\tA20N\tTC-NBA","PC4520\tSAW\tADB\tA320\tTC-DCL","XQ9359\tSZF\tADB\tB738\tTC-SEI","TK676\tIST\tADD\tB738\tTC-JHZ","TB3313\tBRU\tAOE\tB738\tOO-SRO","PC2738\tSAW\tASR\tA320\tTC-DCD","TK2020\tIST\tASR\tA320\tTC-JPP","TK7296\tSAW\tASR\tB738\tTC-SCG","OA909\tLCA\tATH\tA320\tSX-DVJ","EY20\tLHR\tAUH\tB789\tA6-BLA","EY78\tAMS\tAUH\tB77W\tA6-ETC","EY50\tBCN\tAUH\tB789\tA6-BLQ","EY22\tMAN\tAUH\tB789\tA6-BNB","TK7536\tSAW\tAYT\tB738\tTC-SBP","PC2022\tSAW\tAYT\tB738\tTC-CPJ","D0547\tLEJ\tBAH\tB763\tG-DHLE","LS1272\tPFO\tBHX\tB738\tG-JZHE","BY7781\tLCA\tBHX\tB738\tG-TAWV","TK2524\tIST\tBJV\tA321\tTC-JRA","TG951\tCPH\tBKK\tA359\tHS-THN","AI1178\tLHR\tBLR\tB788\tVT-ANN","5M732\tFRA\tBOM\tA343\t9H-FOX","MS758\tAMS\tCAI\tA20N\tSU-GFL","TK712\tIST\tDAC\tA333\tTC-JNZ","TK7146\tESB\tDIY\tB738\tTC-JZS","BA2562\tLHR\tDLM\tA21N\tG-NEOW","TK7176\tESB\tDLM\tB738\tTC-JGC","QR128\tMXP\tDOH\tA359\tA7-ALT","QR246\tIST\tDOH\tA359\tA7-ALW","QR8184\tLUX\tDOH\tB77L\tA7-BFQ","QR396\tOTP\tDOH\tA320\tA7-AHE","QR274\tAMS\tDOH\tA35K\tA7-ANN","QR176\tOSL\tDOH\tA359\tA7-ALX","QR8865\tARN\tDOH\tB77W\tA7-BAT","QR8011\tLUX\tDOH\tB77W\tA7-BAC","QR8017\tIST\tDOH\tB788\tA7-BCQ","QR184\tVIE\tDOH\tB788\tA7-BCT","SR4273\tKGS\tDRS\tA320\tD-ASEE","EK162\tDUB\tDXB\tB77W\tA6-EGM","EK206\tMXP\tDXB\tB77W\tA6-ENN","EK90\tGVA\tDXB\tB77W\tA6-EQI","EK28\tGLA\tDXB\tB77L\tA6-EWI","EK184\tBRU\tDXB\tB77W\tA6-EPV","EK74\tCDG\tDXB\tA388\tA6-EVK","EK148\tAMS\tDXB\tB77W\tA6-EGS","EK60\tHAM\tDXB\tB77W\tA6-EPY","EK128\tVIE\tDXB\tB77W\tA6-EPX","EK152\tCPH\tDXB\tB77W\tA6-END","EK18\tMAN\tDXB\tB77W\tA6-EPP","EK98\tFCO\tDXB\tB77W\tA6-EPS","EK88\tZRH\tDXB\tB77W\tA6-ENL","EK40\tBHX\tDXB\tB77W\tA6-ENO","EK94\tBLQ\tDXB\tB77W\tA6-ECK","EK56\tDUS\tDXB\tB77W\tA6-EGC","EK2\tLHR\tDXB\tA388\tA6-EUW","EK140\tPRG\tDXB\tB77W\tA6-ENG","EK46\tFRA\tDXB\tB77W\tA6-ENK","AF662\tCDG\tDXB\tB772\tF-GSPG","PC2552\tSAW\tERZ\tB738\tTC-CPC","TK7067\tTZX\tESB\tB738\tTC-JHD","PC3168\tADB\tESB\tA20N\tTC-NCF","TK2644\tIST\tEZS\tA320\tTC-JPM","PC2532\tSAW\tEZS\tA20N\tTC-NBH","PC2422\tSAW\tGNY\tB738\tTC-CPA","TK2226\tIST\tGZT\tA21N\tTC-LSL","PC2134\tSAW\tHTY\tB738\tTC-CRE","TK2254\tIST\tHTY\tB738\tTC-JZF","TK874\tIST\tIKA\tA333\tTC-LOG","TK6506\tEBB\tISL\tA332\tTC-JOO","TK2707\tERZ\tIST\tB738\tTC-JVB","TK2843\tNOP\tIST\tA320\tTC-JPR","TK1020\tPRN\tIST\tB738\tTC-JVY","PC3306\tADB\tIST\tA20N\tTC-NCS","TK2829\tTZX\tIST\tA321\tTC-JRB","UZ115\tMJI\tIST\tB738\t5A-DMG","RJ167\tAMM\tIST\tB788\tJY-BAG","TK2561\tDLM\tIST\tA321\tTC-JRL","SU2280\tSVO\tIST\tA320\tVQ-BSI","TK3234\tKYA\tIST\tB738\tTC-JHP","TK2225\tGZT\tIST\tA21N\tTC-LSJ","7W7694\tAYT\tKBP\tA321\tUR-WRI","PS6212\tAYT\tKBP\tB738\tUR-PSO","G9261\tSHJ\tKBP\tA320\tA6-ANV","FZ1729\tDXB\tKBP\tB738\tA6-FDZ","PS5102\tHRG\tKBP\tB739\tUR-PSK","TK2038\tIST\tKYA\tA319\tTC-JLS","BY4763\tLCA\tLGW\tB752\tG-OOBA","CV7977\tDWC\tLUX\tB748\tLX-VCK","TK84\tIST\tMNL\tB77W\tTC-LJJ","LH1769\tLCA\tMUC\tA20N\tD-AINT","TK2008\tIST\tNAV\tA21N\tTC-LSG","BY1757\tKGS\tNCL\tB738\tG-TAWN","PC2890\tSAW\tNOP\tA20N\tTC-NCA","TK2852\tIST\tOGU\tB738\tTC-JFV","TK7332\tSAW\tOGU\tB738\tTC-JFR","PC2868\tSAW\tOGU\tB738\tTC-CPL","PC2866\tSAW\tOGU\tA20N\tTC-NCN","PC3370\tADB\tOGU\tA20N\tTC-NCL","TK1045\tIST\tOTP\tA333\tTC-LND","RO264\tIST\tOTP\tA318\tYR-ASB","5Q2753\tFRA\tRHO\tA321\tLZ-HEA","OA210\tATH\tRHO\tA321\tSX-DGP","SR4843\tLEJ\tRHO\tA320\tD-ANNA","TK7765\tCDG\tSAW\tB738\tTC-JFI","PC2503\tVAN\tSAW\tA20N\tTC-NBN","PC1282\tARN\tSAW\tB738\tTC-CPZ","PC2677\tESB\tSAW\tB738\tTC-CPE","PC2013\tAYT\tSAW\tA20N\tTC-NBG","PC2827\tTZX\tSAW\tA21N\tTC-RBE","TK7425\tTZX\tSAW\tB738\tTC-JFC","PC2015\tAYT\tSAW\tA20N\tTC-NBM","PC2133\tHTY\tSAW\tA20N\tTC-NCG","TK1029\tIST\tSOF\tB738\tTC-JVD","RL7706\tAYT\tSVO\tB77W\tVQ-BGL","TK7238\tSAW\tSZF\tB738\tTC-JFH","TK7578\tESB\tSZF\tB738\tTC-JKV","TK2808\tIST\tSZF\tA320\tTC-JPI","XQ7780\tAYT\tSZF\tB738\tTC-SEM","HY3568\tIST\tTAS\tA20N\tUK32021","TK370\tIST\tTAS\tA333\tTC-JOF","PS791\tDNK\tTLV\tE190\tUR-EME","BJ651\tIST\tTUN\tA320\tTS-IND","PC2828\tSAW\tTZX\tA20N\tTC-NCO","PC3532\tAYT\tTZX\tA320\tTC-DCG","XQ9270\tADB\tTZX\tB738\tTC-SOD","TK7434\tSAW\tTZX\tB738\tTC-JFY","PC2752\tSAW\tVAS\tA20N\tTC-NBD","ZF8884\tAYT\tVKO\tB77W\tVQ-BZC"],null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addMarkers","args":[[39.9350013733,40.1281013489,39.949798584,40.0788993835,36.9822006226,37.0021018982,38.726398468,36.898701,36.9472007751,36.5744552612,37.979,38.353699,40.829399,39.813801,38.4352989197,38.770401001,39.4514999389648,40.307430267334,37.7855987549,40.976898,39.6193008422852,40.318000793457,39.7840995789,38.2924003601,38.3190994262695,38.5130004883,37.7851219177246,39.426700592041,40.684398651123,40.7350006103516,36.7131004333,38.8088989257812,37.1400985717773,40.9930000305176,38.6068992615,37.893901825,39.7102012634,39.9565010071,40.9950981140137,38.4682006835938,37.9290008545,37.9789009094238,38.5176010131836,37.9506988525391,38.7719,37.2505989075,40.898601532,38.6814994812012,40.562198638916,37.0942993164062,37.5388259888,39.654541015625,37.7313995361,37.8554000854,39.554599762,41.254501,37.2233009338,39.809898,40.1376991272,38.7477989196777,42.015800476074,41.1381988525391,40.2551994324,36.36277771,41.506401062,36.299217,39.9766273499,37.445663,39.113079,38.8592605591,41.3142013549805,40.2332992553711,37.3647,40.966047,37.5497,41.275278],[32.7407989502,32.995098114,32.6885986328,32.5656013489,35.2803993225,35.4258995056,30.6011009216,30.800501,37.4786987305,36.1534194946,32.561901,38.253899,35.521999,36.9035,38.0909996033,35.4953994751,31.3652992248535,36.3674087524414,29.7012996674,28.8146,27.9260005950928,27.9776992797852,30.5820999146,27.156999588,27.1594009399414,27.010099411,30.5900192260742,30.0168991088867,29.3756999969482,30.0832996368408,28.7924995422,27.8339004516602,27.6697006225586,29.2164993286133,39.2914009094,40.2010002136,39.5270004272,41.1702003479,39.7896995544434,43.3322982788086,41.1166000366,41.8404006958008,26.9773998260498,27.3290004730225,34.5345,27.6643009186,29.3092002869,29.471700668335,43.1150016784668,38.8470993041992,36.9535217285,43.0259780883789,38.4688987732,30.3684005737,27.0137996674,36.567101,40.6316986084,30.5194,26.4267997742,41.6612014770508,35.066398620605,27.9190998077393,29.5625991821,36.2822227478,32.0886001587,32.300598,43.8766479492,38.895592,30.128111,40.5959625244,33.7957992553711,29.0091991424561,42.0582,38.080994,44.2381,28.751944],null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},["\\N\tGüvercinlik Airport","ESB\tEsenboğa International Airport","ANK\tEtimesgut Air Base","\\N\tAkıncı Air Base","ADA\tAdana Airport","UAB\tİncirlik Air Base","AFY\tAfyon Airport","AYT\tAntalya International Airport","GZT\tGaziantep International Airport","\\N\tİskenderun Airport","KYA\tKonya Airport","\\N\tMalatya Tulga Airport","MZH\tAmasya Merzifon Airport","VAS\tSivas Nuri Demirağ Airport","MLX\tMalatya Erhaç Airport","ASR\tKayseri Erkilet Airport","\\N\tSivrihisar Airport","TJK\tTokat Airport","DNZ\tÇardak Airport","ISL\tAtatürk International Airport","BZI\tBalıkesir Merkez Airport","BDM\tBandırma Airport","ESK\tEskişehir Air Base","ADB\tAdnan Menderes International Airport","\\N\tGaziemir Airport","IGL\tÇiğli Airport","\\N\tIsparta Airport","\\N\tKütahya Airport","\\N\tYalova Airport","KCO\tCengiz Topel Airport","DLM\tDalaman International Airport","\\N\tAkhisar Airport","BXN\tImsık Airport","\\N\tSamandıra Air Base","EZS\tElazığ Airport","DIY\tDiyarbakir Airport","ERC\tErzincan Airport","ERZ\tErzurum International Airport","TZX\tTrabzon International Airport","VAN\tVan Ferit Melen Airport","BAL\tBatman Airport","SXZ\tSiirt Airport","\\N\tKaklıç Airport","\\N\tSelçuk Efes Airport","NAV\tNevşehir Kapadokya Airport","BJV\tMilas Bodrum International Airport","SAW\tSabiha Gökçen International Airport","USQ\tUşak Airport","KSY\tKars Airport","SFQ\tŞanlıurfa Airport","KCM\tKahramanmaraş Airport","AJI\tAğrı Airport","ADF\tAdıyaman Airport","ISE\tSüleyman Demirel International Airport","EDO\tBalıkesir Körfez Airport","SZF\tSamsun Çarşamba Airport","MQM\tMardin Airport","AOE\tAnadolu Airport","CKZ\tÇanakkale Airport","MSR\tMuş Airport","NOP\tSinop Airport","TEQ\tTekirdağ Çorlu Airport","YEI\tBursa Yenişehir Airport","HTY\tHatay Airport","ONQ\tZonguldak Airport","GZP\tGazipaşa Airport","IGD\tIğdır Airport","GNY\tŞanlıurfa GAP Airport","KZR\tZafer Airport","BGG\tBingöl Çeltiksuyu Airport","KFS\tKastamonu Airport","BTZ\tBursa Airport","NKT\tŞırnak Şerafettin Elçi Airport","OGU\tOrdu Giresun Airport","YKO\tHakkari Yüksekova Airport","IST\tIstanbul Airport"],null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[35.95,42.015800476074],"lng":[26,44.2381]}},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="veri-seti" class="section level3">
+<h3>Veri Seti</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<div id="htmlwidget-d51da877b03d9b229621" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-d51da877b03d9b229621">{"x":{"filter":"none","extensions":["FixedColumns"],"fillContainer":true,"data":[["ADB","TZX","IST","SAW","SAW","CGN","DUS","SAW","TZX","SAW","SZF","IST","BRU","SAW","IST","SAW","LCA","LHR","AMS","BCN","MAN","SAW","SAW","LEJ","PFO","LCA","IST","CPH","LHR","FRA","AMS","IST","ESB","LHR","ESB","MXP","IST","LUX","OTP","AMS","OSL","ARN","LUX","IST","VIE","KGS","DUB","MXP","GVA","GLA","BRU","CDG","AMS","HAM","VIE","CPH","MAN","FCO","ZRH","BHX","BLQ","DUS","LHR","PRG","FRA","CDG","SAW","TZX","ADB","IST","SAW","SAW","IST","SAW","IST","IST","EBB","ERZ","NOP","PRN","ADB","TZX","MJI","AMM","DLM","SVO","KYA","GZT","AYT","AYT","SHJ","DXB","HRG","IST","LCA","DWC","IST","LCA","IST","KGS","SAW","IST","SAW","SAW","SAW","ADB","IST","IST","FRA","ATH","LEJ","CDG","VAN","ARN","ESB","AYT","TZX","TZX","AYT","HTY","IST","AYT","SAW","ESB","IST","AYT","IST","IST","DNK","IST","SAW","AYT","ADB","SAW","SAW","AYT"],["Adnan Menderes International Airport","Trabzon International Airport","Istanbul Airport","Sabiha Gökçen International Airport","Sabiha Gökçen International Airport","Cologne Bonn Airport","Düsseldorf Airport","Sabiha Gökçen International Airport","Trabzon International Airport","Sabiha Gökçen International Airport","Samsun Çarşamba Airport","Istanbul Airport","Brussels Airport","Sabiha Gökçen International Airport","Istanbul Airport","Sabiha Gökçen International Airport","Larnaca International Airport","London Heathrow Airport","Amsterdam Airport Schiphol","Barcelona International Airport","Manchester Airport","Sabiha Gökçen International Airport","Sabiha Gökçen International Airport","Leipzig/Halle Airport","Paphos International Airport","Larnaca International Airport","Istanbul Airport","Copenhagen Kastrup Airport","London Heathrow Airport","Frankfurt am Main Airport","Amsterdam Airport Schiphol","Istanbul Airport","Esenboğa International Airport","London Heathrow Airport","Esenboğa International Airport","Malpensa International Airport","Istanbul Airport","Luxembourg-Findel International Airport","Henri Coandă International Airport","Amsterdam Airport Schiphol","Oslo Lufthavn","Stockholm-Arlanda Airport","Luxembourg-Findel International Airport","Istanbul Airport","Vienna International Airport","Kos Airport","Dublin Airport","Malpensa International Airport","Geneva Cointrin International Airport","Glasgow International Airport","Brussels Airport","Charles de Gaulle International Airport","Amsterdam Airport Schiphol","Hamburg Airport","Vienna International Airport","Copenhagen Kastrup Airport","Manchester Airport","Leonardo da Vinci–Fiumicino Airport","Zürich Airport","Birmingham International Airport","Bologna Guglielmo Marconi Airport","Düsseldorf Airport","London Heathrow Airport","Václav Havel Airport Prague","Frankfurt am Main Airport","Charles de Gaulle International Airport","Sabiha Gökçen International Airport","Trabzon International Airport","Adnan Menderes International Airport","Istanbul Airport","Sabiha Gökçen International Airport","Sabiha Gökçen International Airport","Istanbul Airport","Sabiha Gökçen International Airport","Istanbul Airport","Istanbul Airport","Entebbe International Airport","Erzurum International Airport","Sinop Airport","Priština International Airport","Adnan Menderes International Airport","Trabzon International Airport","Mitiga Airport","Queen Alia International Airport","Dalaman International Airport","Sheremetyevo International Airport","Konya Airport","Gaziantep International Airport","Antalya International Airport","Antalya International Airport","Sharjah International Airport","Dubai International Airport","Hurghada International Airport","Istanbul Airport","Larnaca International Airport","Al Maktoum International Airport","Istanbul Airport","Larnaca International Airport","Istanbul Airport","Kos Airport","Sabiha Gökçen International Airport","Istanbul Airport","Sabiha Gökçen International Airport","Sabiha Gökçen International Airport","Sabiha Gökçen International Airport","Adnan Menderes International Airport","Istanbul Airport","Istanbul Airport","Frankfurt am Main Airport","Eleftherios Venizelos International Airport","Leipzig/Halle Airport","Charles de Gaulle International Airport","Van Ferit Melen Airport","Stockholm-Arlanda Airport","Esenboğa International Airport","Antalya International Airport","Trabzon International Airport","Trabzon International Airport","Antalya International Airport","Hatay Airport","Istanbul Airport","Antalya International Airport","Sabiha Gökçen International Airport","Esenboğa International Airport","Istanbul Airport","Antalya International Airport","Istanbul Airport","Istanbul Airport","Dnipropetrovsk International Airport","Istanbul Airport","Sabiha Gökçen International Airport","Antalya International Airport","Adnan Menderes International Airport","Sabiha Gökçen International Airport","Sabiha Gökçen International Airport","Antalya International Airport"],["Turkey","Turkey","Turkey","Turkey","Turkey","Germany","Germany","Turkey","Turkey","Turkey","Turkey","Turkey","Belgium","Turkey","Turkey","Turkey","Cyprus","United Kingdom","Netherlands","Spain","United Kingdom","Turkey","Turkey","Germany","Cyprus","Cyprus","Turkey","Denmark","United Kingdom","Germany","Netherlands","Turkey","Turkey","United Kingdom","Turkey","Italy","Turkey","Luxembourg","Romania","Netherlands","Norway","Sweden","Luxembourg","Turkey","Austria","Greece","Ireland","Italy","Switzerland","United Kingdom","Belgium","France","Netherlands","Germany","Austria","Denmark","United Kingdom","Italy","Switzerland","United Kingdom","Italy","Germany","United Kingdom","Czech Republic","Germany","France","Turkey","Turkey","Turkey","Turkey","Turkey","Turkey","Turkey","Turkey","Turkey","Turkey","Uganda","Turkey","Turkey","Serbia","Turkey","Turkey","Libya","Jordan","Turkey","Russia","Turkey","Turkey","Turkey","Turkey","United Arab Emirates","United Arab Emirates","Egypt","Turkey","Cyprus","United Arab Emirates","Turkey","Cyprus","Turkey","Greece","Turkey","Turkey","Turkey","Turkey","Turkey","Turkey","Turkey","Turkey","Germany","Greece","Germany","France","Turkey","Sweden","Turkey","Turkey","Turkey","Turkey","Turkey","Turkey","Turkey","Turkey","Turkey","Turkey","Turkey","Turkey","Turkey","Turkey","Ukraine","Turkey","Turkey","Turkey","Turkey","Turkey","Turkey","Turkey"],["ADA","ADA","ADA","ADA","ADA","ADB","ADB","ADB","ADB","ADB","ADB","ADD","AOE","ASR","ASR","ASR","ATH","AUH","AUH","AUH","AUH","AYT","AYT","BAH","BHX","BHX","BJV","BKK","BLR","BOM","CAI","DAC","DIY","DLM","DLM","DOH","DOH","DOH","DOH","DOH","DOH","DOH","DOH","DOH","DOH","DRS","DXB","DXB","DXB","DXB","DXB","DXB","DXB","DXB","DXB","DXB","DXB","DXB","DXB","DXB","DXB","DXB","DXB","DXB","DXB","DXB","ERZ","ESB","ESB","EZS","EZS","GNY","GZT","HTY","HTY","IKA","ISL","IST","IST","IST","IST","IST","IST","IST","IST","IST","IST","IST","KBP","KBP","KBP","KBP","KBP","KYA","LGW","LUX","MNL","MUC","NAV","NCL","NOP","OGU","OGU","OGU","OGU","OGU","OTP","OTP","RHO","RHO","RHO","SAW","SAW","SAW","SAW","SAW","SAW","SAW","SAW","SAW","SOF","SVO","SZF","SZF","SZF","SZF","TAS","TAS","TLV","TUN","TZX","TZX","TZX","TZX","VAS","VKO"],["Adana Airport","Adana Airport","Adana Airport","Adana Airport","Adana Airport","Adnan Menderes International Airport","Adnan Menderes International Airport","Adnan Menderes International Airport","Adnan Menderes International Airport","Adnan Menderes International Airport","Adnan Menderes International Airport","Addis Ababa Bole International Airport","Anadolu Airport","Kayseri Erkilet Airport","Kayseri Erkilet Airport","Kayseri Erkilet Airport","Eleftherios Venizelos International Airport","Abu Dhabi International Airport","Abu Dhabi International Airport","Abu Dhabi International Airport","Abu Dhabi International Airport","Antalya International Airport","Antalya International Airport","Bahrain International Airport","Birmingham International Airport","Birmingham International Airport","Milas Bodrum International Airport","Suvarnabhumi Airport","Kempegowda International Airport","Chhatrapati Shivaji International Airport","Cairo International Airport","Hazrat Shahjalal International Airport","Diyarbakir Airport","Dalaman International Airport","Dalaman International Airport","Hamad International Airport","Hamad International Airport","Hamad International Airport","Hamad International Airport","Hamad International Airport","Hamad International Airport","Hamad International Airport","Hamad International Airport","Hamad International Airport","Hamad International Airport","Dresden Airport","Dubai International Airport","Dubai International Airport","Dubai International Airport","Dubai International Airport","Dubai International Airport","Dubai International Airport","Dubai International Airport","Dubai International Airport","Dubai International Airport","Dubai International Airport","Dubai International Airport","Dubai International Airport","Dubai International Airport","Dubai International Airport","Dubai International Airport","Dubai International Airport","Dubai International Airport","Dubai International Airport","Dubai International Airport","Dubai International Airport","Erzurum International Airport","Esenboğa International Airport","Esenboğa International Airport","Elazığ Airport","Elazığ Airport","Şanlıurfa GAP Airport","Gaziantep International Airport","Hatay Airport","Hatay Airport","Imam Khomeini International Airport","Atatürk International Airport","Istanbul Airport","Istanbul Airport","Istanbul Airport","Istanbul Airport","Istanbul Airport","Istanbul Airport","Istanbul Airport","Istanbul Airport","Istanbul Airport","Istanbul Airport","Istanbul Airport","Boryspil International Airport","Boryspil International Airport","Boryspil International Airport","Boryspil International Airport","Boryspil International Airport","Konya Airport","London Gatwick Airport","Luxembourg-Findel International Airport","Ninoy Aquino International Airport","Munich Airport","Nevşehir Kapadokya Airport","Newcastle Airport","Sinop Airport","Ordu Giresun Airport","Ordu Giresun Airport","Ordu Giresun Airport","Ordu Giresun Airport","Ordu Giresun Airport","Henri Coandă International Airport","Henri Coandă International Airport","Diagoras Airport","Diagoras Airport","Diagoras Airport","Sabiha Gökçen International Airport","Sabiha Gökçen International Airport","Sabiha Gökçen International Airport","Sabiha Gökçen International Airport","Sabiha Gökçen International Airport","Sabiha Gökçen International Airport","Sabiha Gökçen International Airport","Sabiha Gökçen International Airport","Sabiha Gökçen International Airport","Sofia Airport","Sheremetyevo International Airport","Samsun Çarşamba Airport","Samsun Çarşamba Airport","Samsun Çarşamba Airport","Samsun Çarşamba Airport","Tashkent International Airport","Tashkent International Airport","Ben Gurion International Airport","Tunis Carthage International Airport","Trabzon International Airport","Trabzon International Airport","Trabzon International Airport","Trabzon International Airport","Sivas Nuri Demirağ Airport","Vnukovo International Airport"],["Turkey","Turkey","Turkey","Turkey","Turkey","Turkey","Turkey","Turkey","Turkey","Turkey","Turkey","Ethiopia","Turkey","Turkey","Turkey","Turkey","Greece","United Arab Emirates","United Arab Emirates","United Arab Emirates","United Arab Emirates","Turkey","Turkey","Bahrain","United Kingdom","United Kingdom","Turkey","Thailand","India","India","Egypt","Bangladesh","Turkey","Turkey","Turkey","Qatar","Qatar","Qatar","Qatar","Qatar","Qatar","Qatar","Qatar","Qatar","Qatar","Germany","United Arab Emirates","United Arab Emirates","United Arab Emirates","United Arab Emirates","United Arab Emirates","United Arab Emirates","United Arab Emirates","United Arab Emirates","United Arab Emirates","United Arab Emirates","United Arab Emirates","United Arab Emirates","United Arab Emirates","United Arab Emirates","United Arab Emirates","United Arab Emirates","United Arab Emirates","United Arab Emirates","United Arab Emirates","United Arab Emirates","Turkey","Turkey","Turkey","Turkey","Turkey","Turkey","Turkey","Turkey","Turkey","Iran","Turkey","Turkey","Turkey","Turkey","Turkey","Turkey","Turkey","Turkey","Turkey","Turkey","Turkey","Turkey","Ukraine","Ukraine","Ukraine","Ukraine","Ukraine","Turkey","United Kingdom","Luxembourg","Philippines","Germany","Turkey","United Kingdom","Turkey","Turkey","Turkey","Turkey","Turkey","Turkey","Romania","Romania","Greece","Greece","Greece","Turkey","Turkey","Turkey","Turkey","Turkey","Turkey","Turkey","Turkey","Turkey","Bulgaria","Russia","Turkey","Turkey","Turkey","Turkey","Uzbekistan","Uzbekistan","Israel","Tunisia","Turkey","Turkey","Turkey","Turkey","Turkey","Russia"],["TC-DCI","TC-CPB","TC-JRC","TC-JFG","TC-NBO","TC-SPC","TC-SOH","TC-CRB","TC-NBA","TC-DCL","TC-SEI","TC-JHZ","OO-SRO","TC-DCD","TC-JPP","TC-SCG","SX-DVJ","A6-BLA","A6-ETC","A6-BLQ","A6-BNB","TC-SBP","TC-CPJ","G-DHLE","G-JZHE","G-TAWV","TC-JRA","HS-THN","VT-ANN","9H-FOX","SU-GFL","TC-JNZ","TC-JZS","G-NEOW","TC-JGC","A7-ALT","A7-ALW","A7-BFQ","A7-AHE","A7-ANN","A7-ALX","A7-BAT","A7-BAC","A7-BCQ","A7-BCT","D-ASEE","A6-EGM","A6-ENN","A6-EQI","A6-EWI","A6-EPV","A6-EVK","A6-EGS","A6-EPY","A6-EPX","A6-END","A6-EPP","A6-EPS","A6-ENL","A6-ENO","A6-ECK","A6-EGC","A6-EUW","A6-ENG","A6-ENK","F-GSPG","TC-CPC","TC-JHD","TC-NCF","TC-JPM","TC-NBH","TC-CPA","TC-LSL","TC-CRE","TC-JZF","TC-LOG","TC-JOO","TC-JVB","TC-JPR","TC-JVY","TC-NCS","TC-JRB","5A-DMG","JY-BAG","TC-JRL","VQ-BSI","TC-JHP","TC-LSJ","UR-WRI","UR-PSO","A6-ANV","A6-FDZ","UR-PSK","TC-JLS","G-OOBA","LX-VCK","TC-LJJ","D-AINT","TC-LSG","G-TAWN","TC-NCA","TC-JFV","TC-JFR","TC-CPL","TC-NCN","TC-NCL","TC-LND","YR-ASB","LZ-HEA","SX-DGP","D-ANNA","TC-JFI","TC-NBN","TC-CPZ","TC-CPE","TC-NBG","TC-RBE","TC-JFC","TC-NBM","TC-NCG","TC-JVD","VQ-BGL","TC-JFH","TC-JKV","TC-JPI","TC-SEM","UK32021","TC-JOF","UR-EME","TS-IND","TC-NCO","TC-DCG","TC-SOD","TC-JFY","TC-NBD","VQ-BZC"],["A320","B738","A321","B738","A20N","B738","B738","B738","A20N","A320","B738","B738","B738","A320","A320","B738","A320","B789","B77W","B789","B789","B738","B738","B763","B738","B738","A321","A359","B788","A343","A20N","A333","B738","A21N","B738","A359","A359","B77L","A320","A35K","A359","B77W","B77W","B788","B788","A320","B77W","B77W","B77W","B77L","B77W","A388","B77W","B77W","B77W","B77W","B77W","B77W","B77W","B77W","B77W","B77W","A388","B77W","B77W","B772","B738","B738","A20N","A320","A20N","B738","A21N","B738","B738","A333","A332","B738","A320","B738","A20N","A321","B738","B788","A321","A320","B738","A21N","A321","B738","A320","B738","B739","A319","B752","B748","B77W","A20N","A21N","B738","A20N","B738","B738","B738","A20N","A20N","A333","A318","A321","A321","A320","B738","A20N","B738","B738","A20N","A21N","B738","A20N","A20N","B738","B77W","B738","B738","A320","B738","A20N","A333","E190","A320","A20N","A320","B738","B738","A20N","B77W"],["PGT","PGT","THY","THY","PGT","SXS","SXS","PGT","PGT","PGT","SXS","THY","TUI","PGT","THY","THY","AEE","ETD","ETD","ETD","ETD","THY","PGT","DHK","EXS","TUI","THY","THA","AIC","HFY","MSR","THY","THY","BAW","THY","QTR","QTR","QTR","QTR","QTR","QTR","QTR","QTR","QTR","QTR","SDR","UAE","UAE","UAE","UAE","UAE","UAE","UAE","UAE","UAE","UAE","UAE","UAE","UAE","UAE","UAE","UAE","UAE","UAE","UAE","AFR","PGT","THY","PGT","THY","PGT","PGT","THY","PGT","THY","THY","THY","THY","THY","THY","PGT","THY","BRQ","RJA","THY","AFL","THY","THY","WRC","AUI","ABY","FDB","AUI","THY","TUI","CLX","THY","DLH","THY","TUI","PGT","THY","THY","PGT","PGT","PGT","THY","ROT","HES","AEE","SDR","THY","PGT","PGT","PGT","PGT","PGT","THY","PGT","PGT","THY","ABG","THY","THY","THY","SXS","UZB","THY","AUI","LBT","PGT","PGT","SXS","THY","PGT","AZV"],[452,392,479,357,0,5,157,1,384,466,373,460,504,284,500,0,416,530,495,526,510,256,7,470,411,418,480,541,543,512,475,508,470,307,423,526,0,509,499,524,522,460,510,503,516,394,505,522,518,503,507,521,494,509,519,516,520,519,519,510,528,517,509,512,517,507,498,21,205,454,483,9,449,466,428,0,435,409,249,464,179,377,446,490,150,400,164,400,419,411,455,470,399,395,428,468,333,408,392,274,491,399,489,515,273,347,0,352,23,270,0,140,389,391,0,13,275,367,357,400,0,554,504,268,502,345,494,0,412,172,488,508,7,1,434,552],[21300,36000,25100,16800,0,0,3575,0,28950,29000,33875,25475,35000,8800,35000,0,37975,41000,37000,39000,38975,5800,0,32975,36575,38000,30400,39000,38975,35050,37050,36900,36975,12200,40000,41000,0,35000,37050,39000,39000,39000,37000,40975,40975,21700,37000,37000,37000,39000,35000,39000,37000,37000,37000,37000,37000,39000,37000,37000,39000,37000,40975,37000,37000,39000,37000,0,6500,35000,34850,0,35025,37000,37000,0,39150,38000,5775,32075,2300,18925,36000,43000,125,36000,5100,29124,33975,36000,38000,38000,36000,15675,38000,34000,10450,38000,18000,7825,33000,33000,37000,35000,19875,31000,0,17150,0,4750,0,1125,28250,22600,0,0,12425,18000,24100,36550,0,34000,35000,10050,33000,10675,32975,0,37000,3500,37050,35000,0,0,17600,34000]],"container":"<table class=\"display fill-container\">\n  <thead>\n    <tr>\n      <th>Kalkış<\/th>\n      <th>KalkışAlanı<\/th>\n      <th>KalkışÜlke<\/th>\n      <th>Varış<\/th>\n      <th>VarışAlanı<\/th>\n      <th>VarışÜlke<\/th>\n      <th>UçakKaydı<\/th>\n      <th>Uçak Türü<\/th>\n      <th>TicariMarka<\/th>\n      <th>Hız<\/th>\n      <th>YerdenYükseklik<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"bPaginate":false,"dom":"t","buttons":["excel"],"columnDefs":[{"className":"dt-right","targets":[9,10]}],"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data) {\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'font-size':'14px'});\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'font-size':'14px'});\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'font-size':'14px'});\nvar value=data[3]; $(this.api().cell(row, 3).node()).css({'font-size':'14px'});\nvar value=data[4]; $(this.api().cell(row, 4).node()).css({'font-size':'14px'});\nvar value=data[5]; $(this.api().cell(row, 5).node()).css({'font-size':'14px'});\nvar value=data[6]; $(this.api().cell(row, 6).node()).css({'font-size':'14px'});\nvar value=data[7]; $(this.api().cell(row, 7).node()).css({'font-size':'14px'});\nvar value=data[8]; $(this.api().cell(row, 8).node()).css({'font-size':'14px'});\nvar value=data[9]; $(this.api().cell(row, 9).node()).css({'font-size':'14px'});\nvar value=data[10]; $(this.api().cell(row, 10).node()).css({'font-size':'14px'});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+</div>
+<div id="hakkında" class="section level3">
+<h3>Hakkında</h3>
+<p><strong>Türkiye Hava Sahası Dashboard - FlightRadar24.com </strong></p>
+<p>(<a href="https://www.flightradar24.com/" class="uri">https://www.flightradar24.com/</a>) websitesinin sağladığı veriler doğrultusunda Türkiye Hava Sahası Dashboard çalışmasıdır. <a href="https://rmarkdown.rstudio.com/">Rmarkdown</a> altyapısı kullanılarak <a href="https://rmarkdown.rstudio.com/flexdashboard/">flexdashboard</a> kütüphanesiyle geliştirilmiştir. Çalışmanın açık kaynak kodlarına <a href="https://github.com/tolgakurtuluss/">buradan</a> erişebilirsiniz.</p>
+<p><strong>Veri</strong></p>
+<p>Canlı uçak verilerinin sağlayıcısı olarak FlightRadar24.com websitesinin <a href="https://data-live.flightradar24.com/zones/fcgi/feed.js?bounds=42.02,35.90,25.90,45.02&amp;faa=1&amp;satellite=1&amp;mlat=1&amp;flarm=1&amp;adsb=1&amp;gnd=1&amp;air=1&amp;vehicles=1&amp;estimated=1&amp;maxage=14400&amp;gliders=1&amp;stats=1">bu linki</a> referans alınmıştır.</p>
+<p>Havalimanları, isimleri, koordinatlarının yer aldığı veriseti OpenFlights.org websitesinin <a href="https://openflights.org/data.html">bu linki</a> kullanılarak referans alınmıştır.</p>
+<p><strong>Kütüphaneler</strong></p>
+<ul>
+<li>Dashboard arayüz - <a href="https://rmarkdown.rstudio.com/flexdashboard/">flexdashboard</a> kütüphanesi</li>
+<li>Görselleştirme - <a href="https://plot.ly/r/">plotly</a> kütüphanesi.</li>
+<li>Veri manipülasyonu - <a href="https://dplyr.tidyverse.org/">dplyr</a>, <a href="https://tidyr.tidyverse.org/">tidyr</a>, ve <a href="https://purrr.tidyverse.org/">purrr</a> kütüphaneleri.</li>
+<li>Harita Geliştirme - <a href="https://rstudio.github.io/leaflet/">leaflet</a> kütüphanesi.</li>
+<li>Veri Tablosu - <a href="https://cran.r-project.org/web/packages/DT/index.html">DT</a> kütüphanesi.</li>
+</ul>
+<p><strong>İletişim</strong></p>
+<p>Herhangi bir soru, geri bildirim ve iletişime geçmek için aşağıdaki bağlantıları kullanabilirsiniz.</p>
+<p><a href="mailto:tolgakurtulus95@gmail.com">Mail</a> <a href="https://github.com/tolgakurtuluss">GitHub</a> <a href="https://twitter.com/tolgaakurtuluss">Twitter</a></p>
+<p><strong>Önemli NOT</strong></p>
+<p>“Türkiye Hava Sahası Dashboard - FlightRadar24.com” çalışması hiçbir ticari kaygı güdülmeden, ticari amaçlarla kullanılmaksızın sadece eğitim amacı ile hazırlanmıştır. Çalışmanın hiçbir kişi ve kurumla doğrudan veya dolaylı olarak bağlantısı ve/veya kullanımı söz konusu değildir.</p>
+<p>FlightRadar24.com sitesi “FlightRadar24.com” isminin tek yetkili sahibidir.</p>
+<p><strong>Special Thanks</strong></p>
+<p>Special thanks to Rami Krispin who provided valuable blog post for building and deploying flexdashboard on Github Pages. <a href="https://ramikrispin.github.io/">Personal Blog</a> <a href="https://github.com/RamiKrispin/">Github</a></p>
+</div>
+</div>
+
+</div>
+
+<script>
+
+$(document).ready(function () {
+
+  // add bootstrap table styles to pandoc tables
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+
+  // initialize mathjax
+  var script = document.createElement("script");
+  script.type = "text/javascript";
+  script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+  document.getElementsByTagName("head")[0].appendChild(script);
+
+});
+</script>
+
+<div id="flexdashboard-source-code">
+<pre class="line-numbers"><code class="language-r">---
+title: "Türkiye Hava Sahası Dashboard - FlightRadar24.com"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    social: menu
+    source_code: embed
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+#------------------ Packages ------------------
+library(flexdashboard)
+library(dplyr)
+library(tidyr)
+library(jsonlite)
+library(htmltools)
+library(leaflet)
+library(mapview)
+library(DT)
+
+
+#------------------ Colors ------------------
+
+total_color <- "#8AA8A1"
+tc_color <- "#885A89"
+thy_color <- "#0053A5"
+pgs_color <- "#FBA404"
+
+#------------------ Data ------------------
+
+#36° - 42° Kuzey paralelleri ile 26° 45° Doğu meridyenleri
+long <- c("42.02,35.90")
+lati <- c("25.90,45.02")
+
+dd <- fromJSON(paste0("https://data-live.flightradar24.com/zones/fcgi/feed.js?bounds=",long,",",lati,"&faa=1&satellite=1&mlat=1&flarm=1&adsb=1&gnd=1&air=1&vehicles=1&estimated=1&maxage=14400&gliders=1&stats=1"))
+
+dd <- dd[-c(1,2,length(dd))]
+
+df <- data.frame(matrix(unlist(dd), nrow=length(dd), byrow=T))
+
+colnames(df) = c("id","lat","lng","hdg","alt","spd","x7","fcode","type","regis","time","departure","arrival","callsign","x15","x16","x17","x18","brand")
+
+df$lng <- as.numeric(df$lng)
+df$lat <- as.numeric(df$lat)
+df$spd <- as.numeric(df$spd)
+df$hdg <- as.numeric(df$hdg)
+df$alt <- as.numeric(df$alt)
+df$brand <- as.factor(df$brand)
+df$departure <-as.factor(df$departure)
+df$arrival <-as.factor(df$arrival)
+df$type <-as.factor(df$type)
+
+airdata <- read.csv("https://raw.githubusercontent.com/jpatokal/openflights/master/data/airports.dat", header = FALSE,encoding="UTF-8")
+
+colnames(airdata) <- c("rownr","airportname","airportshortname","country","IATA","ICAO","LAT","LNG","ALT","TIMEZONE","DST","CONTINENT","TYPEOF","TYPEOF2")
+
+airdata <- airdata %>% 
+  select(airportname,country,IATA,LAT,LNG) %>% 
+  mutate(airportname=as.factor(airportname),
+         country=as.factor(country),
+         IATA=as.factor(IATA))
+
+df <- merge(df,airdata, by.x= "departure",by.y = "IATA")
+df <- merge(df,airdata, by.x= "arrival",by.y = "IATA")
+
+df <- rename(df,
+             depairportname = "airportname.x",
+             depcountryname = "country.x",
+             arrairportname = "airportname.y",
+             arrcountryname = "country.y") %>% 
+      mutate(depairportname = as.character(depairportname),
+             depcountryname = as.character(depcountryname),
+             arrairportname = as.character(arrairportname),
+             arrcountryname = as.character(arrcountryname))
+
+```
+
+
+Row
+-----------------------------------------------------------------------
+
+### active {.value-box}
+
+```{r}
+
+valueBox(value = paste(nrow(df %>% filter(regis != "" & regis != "00000000"))), 
+         caption = "Toplam Aktif Uçak", 
+         icon = "fas fa-paper-plane", 
+         color = total_color)
+```
+
+
+### tcregister {.value-box}
+
+```{r}
+valueBox(value = paste(nrow(filter(df, grepl('TC-', regis)))), 
+         caption = "TC Kayıtlı Uçaklar", icon = "fas fa-flag", 
+         color = tc_color)
+```
+
+### THY {.value-box}
+
+```{r}
+valueBox(value = paste(nrow(df %>%
+  select(lng, lat, departure, arrival,brand,callsign,type,regis) %>%
+  filter(brand == "THY"))), 
+         caption = "THY Uçakları", icon = "fas fa-plane", 
+         color = thy_color)
+```
+
+### PGS {.value-box}
+
+```{r}
+
+valueBox(value = paste(nrow(df %>%
+  select(lng, lat, departure, arrival,brand,callsign,type,regis) %>%
+  filter(brand == "PGT"))),
+         caption = "PGS Uçakları", 
+         icon = "fas fa-plane", 
+         color = pgs_color)
+```
+
+
+Row {.tabset}
+-----------------------------------------------------------------------
+
+### Havadaki Uçakların Dağılımı
+
+```{r daily_summary}
+
+
+plotly::plot_ly(
+  data = df %>% count(type,sort = TRUE),
+  type= "treemap",
+  values = ~n,
+  labels= ~ type,
+  parents= "Uçak Tipleri",
+  name = "Tip",
+  domain = list(column=0),
+  textinfo="label+value+percent parent"
+) %>%
+  plotly::add_trace(
+    data = df %>% count(departure,depairportname,depcountryname,sort = TRUE),
+    type= "treemap",
+    values = ~n,
+    labels= ~departure,
+    parents= "Kalkış Havalimanları",
+    domain = list(column=1),
+    name = "Kalkış",
+    textinfo="label+value+percent parent",
+    hovertemplate = ~paste(depairportname, "-", depcountryname)
+  ) %>%
+  plotly::add_trace(
+    data = df %>% count(arrival,arrairportname,arrcountryname,sort = TRUE),
+    type= "treemap",
+    values = ~n,
+    labels= ~arrival,
+    parents= "Varış Havalimanları",
+    domain = list(column=2),
+    name = "Varış",
+    textinfo="label+value+percent parent",
+    hovertemplate = ~paste(arrairportname, "-", arrcountryname)
+  ) %>%
+  plotly::add_trace(
+    data = df %>% count(brand, sort = TRUE),
+    type= "treemap",
+    values = ~n,
+    labels= ~ brand,
+    name = "Marka",
+    parents=  "Ticari Markalar",
+    domain = list(column=3),
+    textinfo="label+value+percent parent"
+  ) %>%
+  plotly::layout(grid=list(columns=4, rows=1))
+
+```
+
+
+### Harita
+
+```{r}
+
+airdatatr <- airdata %>% filter(country == "Turkey")
+# map tab added by Art Steinmetz
+
+leaflet(df) %>% 
+  setView(35.0025, 38.5585, zoom = 5.4) %>%
+  addTiles()%>%
+  addCircleMarkers(~lng, ~lat,color = "#FBA404", opacity = 3,popup = ~htmlEscape(paste0(callsign,"\t", departure,"\t", arrival, "\t", type, "\t",regis)))%>%
+  addMarkers(airdatatr$LNG,airdatatr$LAT, popup = ~htmlEscape(paste0(airdatatr$IATA,"\t", airdatatr$airportname)))
+```
+
+### Veri Seti
+
+```{r}
+df <- df %>% select(departure,depairportname,depcountryname,arrival,arrairportname,arrcountryname,regis,type,brand,spd,alt)
+
+DT::datatable(df, rownames = FALSE, colnames=c('Kalkış','KalkışAlanı','KalkışÜlke','Varış','VarışAlanı','VarışÜlke','UçakKaydı','Uçak Türü','TicariMarka','Hız','YerdenYükseklik'), extensions = 'FixedColumns', escape=TRUE, options= list(bPaginate = FALSE, dom = 't',buttons = c('excel')))%>%formatStyle(1:11,fontSize = '14px')
+
+```
+
+### Hakkında
+
+**Türkiye Hava Sahası Dashboard - FlightRadar24.com **
+
+(https://www.flightradar24.com/) websitesinin sağladığı veriler doğrultusunda Türkiye Hava Sahası Dashboard çalışmasıdır. [Rmarkdown](https://rmarkdown.rstudio.com/) altyapısı kullanılarak  [flexdashboard](https://rmarkdown.rstudio.com/flexdashboard/) kütüphanesiyle geliştirilmiştir. Çalışmanın açık kaynak kodlarına [buradan](https://github.com/tolgakurtuluss/) erişebilirsiniz.
+
+
+**Veri**
+
+Canlı uçak verilerinin sağlayıcısı olarak FlightRadar24.com websitesinin [bu linki](https://data-live.flightradar24.com/zones/fcgi/feed.js?bounds=42.02,35.90,25.90,45.02&faa=1&satellite=1&mlat=1&flarm=1&adsb=1&gnd=1&air=1&vehicles=1&estimated=1&maxage=14400&gliders=1&stats=1) referans alınmıştır.
+
+Havalimanları, isimleri, koordinatlarının yer aldığı veriseti OpenFlights.org websitesinin [bu linki](https://openflights.org/data.html) kullanılarak referans alınmıştır.
+
+
+
+**Kütüphaneler**
+
+* Dashboard arayüz - [flexdashboard](https://rmarkdown.rstudio.com/flexdashboard/) kütüphanesi 
+* Görselleştirme - [plotly](https://plot.ly/r/) kütüphanesi.
+* Veri manipülasyonu - [dplyr](https://dplyr.tidyverse.org/), [tidyr](https://tidyr.tidyverse.org/), ve [purrr](https://purrr.tidyverse.org/) kütüphaneleri.
+* Harita Geliştirme - [leaflet](https://rstudio.github.io/leaflet/) kütüphanesi.
+* Veri Tablosu - [DT](https://cran.r-project.org/web/packages/DT/index.html) kütüphanesi.
+
+**İletişim**
+
+Herhangi bir soru, geri bildirim ve iletişime geçmek için aşağıdaki bağlantıları kullanabilirsiniz.
+
+[Mail](mailto:tolgakurtulus95@gmail.com)
+[GitHub](https://github.com/tolgakurtuluss)
+[Twitter](https://twitter.com/tolgaakurtuluss)
+
+
+**Önemli NOT**
+
+"Türkiye Hava Sahası Dashboard - FlightRadar24.com" çalışması hiçbir ticari kaygı güdülmeden, ticari amaçlarla kullanılmaksızın sadece eğitim amacı ile hazırlanmıştır. Çalışmanın hiçbir kişi ve kurumla doğrudan veya dolaylı olarak bağlantısı ve/veya kullanımı söz konusu değildir. 
+
+FlightRadar24.com sitesi "FlightRadar24.com" isminin tek yetkili sahibidir.
+
+
+**Special Thanks**
+
+Special thanks to Rami Krispin who provided valuable blog post for building and deploying flexdashboard on Github Pages.
+[Personal Blog](https://ramikrispin.github.io/)
+[Github](https://github.com/RamiKrispin/)
+
+</code></pre>
+</div>
+<script type="text/javascript">
+$(document).ready(function () {
+  FlexDashboard.init({
+    theme: "cosmo",
+    fillPage: true,
+    orientation: "rows",
+    storyboard: false,
+    defaultFigWidth: 576,
+    defaultFigHeight: 460,
+    defaultFigWidthMobile: 360,
+    defaultFigHeightMobile: 460,
+    resize_reload: true
+  });
+});
+</script>
+
+</body>
+</html>

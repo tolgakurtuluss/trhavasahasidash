@@ -1,0 +1,247 @@
+---
+title: "Türkiye Hava Sahası Dashboard - FlightRadar24.com"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    social: menu
+    source_code: embed
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+#------------------ Packages ------------------
+library(flexdashboard)
+library(dplyr)
+library(tidyr)
+library(jsonlite)
+library(htmltools)
+library(leaflet)
+library(mapview)
+library(DT)
+
+
+#------------------ Colors ------------------
+
+total_color <- "#8AA8A1"
+tc_color <- "#885A89"
+thy_color <- "#0053A5"
+pgs_color <- "#FBA404"
+
+#------------------ Data ------------------
+
+#36° - 42° Kuzey paralelleri ile 26° 45° Doğu meridyenleri
+long <- c("42.02,35.90")
+lati <- c("25.90,45.02")
+
+dd <- fromJSON(paste0("https://data-live.flightradar24.com/zones/fcgi/feed.js?bounds=",long,",",lati,"&faa=1&satellite=1&mlat=1&flarm=1&adsb=1&gnd=1&air=1&vehicles=1&estimated=1&maxage=14400&gliders=1&stats=1"))
+
+dd <- dd[-c(1,2,length(dd))]
+
+df <- data.frame(matrix(unlist(dd), nrow=length(dd), byrow=T))
+
+colnames(df) = c("id","lat","lng","hdg","alt","spd","x7","fcode","type","regis","time","departure","arrival","callsign","x15","x16","x17","x18","brand")
+
+df$lng <- as.numeric(df$lng)
+df$lat <- as.numeric(df$lat)
+df$spd <- as.numeric(df$spd)
+df$hdg <- as.numeric(df$hdg)
+df$alt <- as.numeric(df$alt)
+df$brand <- as.factor(df$brand)
+df$departure <-as.factor(df$departure)
+df$arrival <-as.factor(df$arrival)
+df$type <-as.factor(df$type)
+
+airdata <- read.csv("https://raw.githubusercontent.com/jpatokal/openflights/master/data/airports.dat", header = FALSE,encoding="UTF-8")
+
+colnames(airdata) <- c("rownr","airportname","airportshortname","country","IATA","ICAO","LAT","LNG","ALT","TIMEZONE","DST","CONTINENT","TYPEOF","TYPEOF2")
+
+airdata <- airdata %>% 
+  select(airportname,country,IATA,LAT,LNG) %>% 
+  mutate(airportname=as.factor(airportname),
+         country=as.factor(country),
+         IATA=as.factor(IATA))
+
+df <- merge(df,airdata, by.x= "departure",by.y = "IATA")
+df <- merge(df,airdata, by.x= "arrival",by.y = "IATA")
+
+df <- rename(df,
+             depairportname = "airportname.x",
+             depcountryname = "country.x",
+             arrairportname = "airportname.y",
+             arrcountryname = "country.y") %>% 
+      mutate(depairportname = as.character(depairportname),
+             depcountryname = as.character(depcountryname),
+             arrairportname = as.character(arrairportname),
+             arrcountryname = as.character(arrcountryname))
+
+```
+
+
+Row
+-----------------------------------------------------------------------
+
+### active {.value-box}
+
+```{r}
+
+valueBox(value = paste(nrow(df %>% filter(regis != "" & regis != "00000000"))), 
+         caption = "Toplam Aktif Uçak", 
+         icon = "fas fa-paper-plane", 
+         color = total_color)
+```
+
+
+### tcregister {.value-box}
+
+```{r}
+valueBox(value = paste(nrow(filter(df, grepl('TC-', regis)))), 
+         caption = "TC Kayıtlı Uçaklar", icon = "fas fa-flag", 
+         color = tc_color)
+```
+
+### THY {.value-box}
+
+```{r}
+valueBox(value = paste(nrow(df %>%
+  select(lng, lat, departure, arrival,brand,callsign,type,regis) %>%
+  filter(brand == "THY"))), 
+         caption = "THY Uçakları", icon = "fas fa-plane", 
+         color = thy_color)
+```
+
+### PGS {.value-box}
+
+```{r}
+
+valueBox(value = paste(nrow(df %>%
+  select(lng, lat, departure, arrival,brand,callsign,type,regis) %>%
+  filter(brand == "PGT"))),
+         caption = "PGS Uçakları", 
+         icon = "fas fa-plane", 
+         color = pgs_color)
+```
+
+
+Row {.tabset}
+-----------------------------------------------------------------------
+
+### Havadaki Uçakların Dağılımı
+
+```{r daily_summary}
+
+
+plotly::plot_ly(
+  data = df %>% count(type,sort = TRUE),
+  type= "treemap",
+  values = ~n,
+  labels= ~ type,
+  parents= "Uçak Tipleri",
+  name = "Tip",
+  domain = list(column=0),
+  textinfo="label+value+percent parent"
+) %>%
+  plotly::add_trace(
+    data = df %>% count(departure,depairportname,depcountryname,sort = TRUE),
+    type= "treemap",
+    values = ~n,
+    labels= ~departure,
+    parents= "Kalkış Havalimanları",
+    domain = list(column=1),
+    name = "Kalkış",
+    textinfo="label+value+percent parent",
+    hovertemplate = ~paste(depairportname, "-", depcountryname)
+  ) %>%
+  plotly::add_trace(
+    data = df %>% count(arrival,arrairportname,arrcountryname,sort = TRUE),
+    type= "treemap",
+    values = ~n,
+    labels= ~arrival,
+    parents= "Varış Havalimanları",
+    domain = list(column=2),
+    name = "Varış",
+    textinfo="label+value+percent parent",
+    hovertemplate = ~paste(arrairportname, "-", arrcountryname)
+  ) %>%
+  plotly::add_trace(
+    data = df %>% count(brand, sort = TRUE),
+    type= "treemap",
+    values = ~n,
+    labels= ~ brand,
+    name = "Marka",
+    parents=  "Ticari Markalar",
+    domain = list(column=3),
+    textinfo="label+value+percent parent"
+  ) %>%
+  plotly::layout(grid=list(columns=4, rows=1))
+
+```
+
+
+### Harita
+
+```{r}
+
+airdatatr <- airdata %>% filter(country == "Turkey")
+# map tab added by Art Steinmetz
+
+leaflet(df) %>% 
+  setView(35.0025, 38.5585, zoom = 5.4) %>%
+  addTiles()%>%
+  addCircleMarkers(~lng, ~lat,color = "#FBA404", opacity = 3,popup = ~htmlEscape(paste0(callsign,"\t", departure,"\t", arrival, "\t", type, "\t",regis)))%>%
+  addMarkers(airdatatr$LNG,airdatatr$LAT, popup = ~htmlEscape(paste0(airdatatr$IATA,"\t", airdatatr$airportname)))
+```
+
+### Veri Seti
+
+```{r}
+df <- df %>% select(departure,depairportname,depcountryname,arrival,arrairportname,arrcountryname,regis,type,brand,spd,alt)
+
+DT::datatable(df, rownames = FALSE, colnames=c('Kalkış','KalkışAlanı','KalkışÜlke','Varış','VarışAlanı','VarışÜlke','UçakKaydı','Uçak Türü','TicariMarka','Hız','YerdenYükseklik'), extensions = 'FixedColumns', escape=TRUE, options= list(bPaginate = FALSE, dom = 't',buttons = c('excel')))%>%formatStyle(1:11,fontSize = '14px')
+
+```
+
+### Hakkında
+
+**Türkiye Hava Sahası Dashboard - FlightRadar24.com **
+
+(https://www.flightradar24.com/) websitesinin sağladığı veriler doğrultusunda Türkiye Hava Sahası Dashboard çalışmasıdır. [Rmarkdown](https://rmarkdown.rstudio.com/) altyapısı kullanılarak  [flexdashboard](https://rmarkdown.rstudio.com/flexdashboard/) kütüphanesiyle geliştirilmiştir. Çalışmanın açık kaynak kodlarına [buradan](https://github.com/tolgakurtuluss/) erişebilirsiniz.
+
+
+**Veri**
+
+Canlı uçak verilerinin sağlayıcısı olarak FlightRadar24.com websitesinin [bu linki](https://data-live.flightradar24.com/zones/fcgi/feed.js?bounds=42.02,35.90,25.90,45.02&faa=1&satellite=1&mlat=1&flarm=1&adsb=1&gnd=1&air=1&vehicles=1&estimated=1&maxage=14400&gliders=1&stats=1) referans alınmıştır.
+
+Havalimanları, isimleri, koordinatlarının yer aldığı veriseti OpenFlights.org websitesinin [bu linki](https://openflights.org/data.html) kullanılarak referans alınmıştır.
+
+
+
+**Kütüphaneler**
+
+* Dashboard arayüz - [flexdashboard](https://rmarkdown.rstudio.com/flexdashboard/) kütüphanesi 
+* Görselleştirme - [plotly](https://plot.ly/r/) kütüphanesi.
+* Veri manipülasyonu - [dplyr](https://dplyr.tidyverse.org/), [tidyr](https://tidyr.tidyverse.org/), ve [purrr](https://purrr.tidyverse.org/) kütüphaneleri.
+* Harita Geliştirme - [leaflet](https://rstudio.github.io/leaflet/) kütüphanesi.
+* Veri Tablosu - [DT](https://cran.r-project.org/web/packages/DT/index.html) kütüphanesi.
+
+**İletişim**
+
+Herhangi bir soru, geri bildirim ve iletişime geçmek için aşağıdaki bağlantıları kullanabilirsiniz.
+
+[Mail](mailto:tolgakurtulus95@gmail.com)
+[GitHub](https://github.com/tolgakurtuluss)
+[Twitter](https://twitter.com/tolgaakurtuluss)
+
+
+**Önemli NOT**
+
+"Türkiye Hava Sahası Dashboard - FlightRadar24.com" çalışması hiçbir ticari kaygı güdülmeden, ticari amaçlarla kullanılmaksızın sadece eğitim amacı ile hazırlanmıştır. Çalışmanın hiçbir kişi ve kurumla doğrudan veya dolaylı olarak bağlantısı ve/veya kullanımı söz konusu değildir. 
+
+FlightRadar24.com sitesi "FlightRadar24.com" isminin tek yetkili sahibidir.
+
+
+**Special Thanks**
+
+Special thanks to Rami Krispin who provided valuable blog post for building and deploying flexdashboard on Github Pages.
+[Personal Blog](https://ramikrispin.github.io/)
+[Github](https://github.com/RamiKrispin/)
+
